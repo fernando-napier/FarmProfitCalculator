@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.fernando.farmingfarming.Profit"
+    android:id="@+id/profitBackground">
+
+    <TextView
+        android:text="Profit Chart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/profitTitle"
+        android:textSize="60sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Region"
+        android:id="@+id/profitButtonToSpinner"
+        android:layout_below="@+id/profitTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profitRegionSpinner"
+        android:layout_alignTop="@+id/profitButtonToSpinner"
+        android:layout_alignLeft="@+id/profitButtonToSpinner"
+        android:layout_alignBottom="@+id/profitButtonToSpinner"
+        android:layout_alignRight="@+id/profitButtonToSpinner"
+        android:visibility="invisible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Crop"
+        android:id="@+id/profitButtonCrop"
+        android:layout_below="@+id/profitTitle"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profitCropSpinner"
+        android:layout_alignTop="@+id/profitButtonCrop"
+        android:layout_alignLeft="@+id/profitButtonCrop"
+        android:layout_alignBottom="@+id/profitButtonCrop"
+        android:layout_alignRight="@+id/profitButtonCrop" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="EXECUTE"
+        android:id="@+id/profitExecute"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="70sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waiting for Execute..."
+        android:id="@+id/profitOutput"
+        android:layout_below="@+id/profitButtonToSpinner"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
