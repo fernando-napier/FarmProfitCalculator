@@ -1,5 +1,7 @@
 package com.example.fernando.farmingfarming;
 
+import android.util.Log;
+
 /**
  * Created by Fernando on 8/17/2015.
  *
@@ -21,14 +23,18 @@ public class SetServerReady {
 
 
     public void setRegion(boolean i){
+        Log.d("Server , setRegion","i");
         region = i;
    }
     public void setCrop (boolean i){
+        Log.d("Server , setCrop","i");
         crop = i;
     }
 
     public boolean getEnabled(){
-        return (region && crop) != false;
+
+        Log.d("Server , getEnabled"," "+(region & crop));
+        return (region & crop);
 
     }
 }

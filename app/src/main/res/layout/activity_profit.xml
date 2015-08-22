@@ -66,8 +66,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Waiting for Execute..."
-        android:id="@+id/profitOutput"
+        android:id="@+id/profitWaiting"
         android:layout_below="@+id/profitButtonToSpinner"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/profitOutput"
+        android:layout_below="@+id/profitButtonToSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"
+        android:layout_alignLeft="@+id/profitButtonToSpinner"
+        android:layout_alignRight="@+id/profitButtonCrop"
+        android:layout_above="@+id/profitExecute" />
 
 </RelativeLayout>
