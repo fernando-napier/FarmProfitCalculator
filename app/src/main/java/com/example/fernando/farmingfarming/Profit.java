@@ -14,7 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
@@ -79,9 +79,7 @@ public class Profit extends AppCompatActivity {
         });
 
 
-        //TODO: find a way to do something with the selected items
-        //TODO: specifically find a way to take the int, and be able to
-        //TODO: use that data to call to the server
+
         buttonCropSpinner.setOnClickListener(new View.OnClickListener() {
 
 
@@ -118,12 +116,13 @@ public class Profit extends AppCompatActivity {
                     int regionID = regionSpinner.getSelectedItemPosition();
                     Log.d("regionID", " "+regionID);
                     CreateURL partURL = new CreateURL(regionID);
-                    String serverURL = "http://server.farmtwat.com/Corn.php?" + partURL.getURL();
+                    String serverURL = "http://10.0.2.2:8080/agapp/Corn.php?" + partURL.getURL();
 
 
-                    //TODO: set up the string request with volley
+
                     Log.d("server request method",serverURL);
-                   getServerRequestJSON(serverURL, regionID);
+                    getServerRequestJSON(serverURL, regionID);
+                    Log.d("server request method","completed");
 
 
                 }
@@ -147,17 +146,19 @@ public class Profit extends AppCompatActivity {
          *  this is where the volley requests occur.
          */
 
+
+        //TODO: need to make sure that the server request actually returns a JSONobject
         RequestQueue req = Volley.newRequestQueue(this);
-        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        StringRequest serverReq = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         // the response is already constructed as a JSONObject
 
-                        Log.d("actual server req","its working");
+                        Log.d("actual server req", response.toString());
                         waiting.setVisibility(View.INVISIBLE);
                         output.setVisibility(View.VISIBLE);
-                        output.setText("Test: " + response.toString());
+                        output.setText("Test: " + response);
 
 
                     }
@@ -175,6 +176,10 @@ public class Profit extends AppCompatActivity {
 
 
         });
+
+        Volley.newRequestQueue(this).add(serverReq);
+
+        Log.d("request queue", "made it through");
 
 
 
