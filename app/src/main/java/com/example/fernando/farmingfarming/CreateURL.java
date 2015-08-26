@@ -12,25 +12,25 @@ public class CreateURL {
 
         switch(i) {
 
-            case (1):
+            case (0):
                 url = "integer=1";
                 break;
-            case (2):
+            case (1):
                 url = "integer=2";
                 break;
-            case (3):
+            case (2):
                 url = "integer=3";
                 break;
-            case (4):
+            case (3):
                 url = "integer=4";
                 break;
-            case (5):
+            case (4):
                 url = "integer=5";
                 break;
-            case (6):
+            case (5):
                 url = "integer=6";
                 break;
-            case (7):
+            case (6):
                 url = "integer=7";
                 break;
             default:
