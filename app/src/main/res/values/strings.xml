@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_profit">Profit</string>
+    <string name="title_activity_corn_profit">CornProfit</string>
+    <string name="title_activity_change_variables">ChangeVariables</string>
 </resources>

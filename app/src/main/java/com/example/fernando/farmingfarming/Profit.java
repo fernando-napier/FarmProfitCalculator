@@ -1,6 +1,7 @@
 package com.example.fernando.farmingfarming;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,26 +10,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.os.AsyncTask;
+
 import android.widget.TextView;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-public class Profit extends AppCompatActivity  {
-
-
-
+public class Profit extends AppCompatActivity {
 
 
     @Override
@@ -37,28 +23,30 @@ public class Profit extends AppCompatActivity  {
         setContentView(R.layout.activity_profit);
 
         final Spinner regionSpinner = (Spinner) findViewById(R.id.profitRegionSpinner);
-        final Button buttonRegionSpinner  = (Button) findViewById(R.id.profitButtonToSpinner);
+        final Button buttonRegionSpinner = (Button) findViewById(R.id.profitButtonToSpinner);
         final Spinner cropSpinner = (Spinner) findViewById(R.id.profitCropSpinner);
         final Button buttonCropSpinner = (Button) findViewById(R.id.profitButtonCrop);
-        final Button getServerData = (Button) findViewById(R.id.profitExecute);
+        final TextView getServerData = (TextView) findViewById(R.id.profitExecute);
+        final TextView waitExecute = (TextView) findViewById(R.id.profitWaiting);
         final SetServerReady serverEnable = new SetServerReady();
-        int regionID = 0;
+
+
+        CropStats currentStats;
 
 
         //Array adapter for choosing the Region
-        ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.regionItems));
+        ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.regionItems));
         // Specify the layout to use when the list of choices appear+
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         regionSpinner.setAdapter(regionAdapter);
 
         //Array adapter for choosing the crop
-        ArrayAdapter<String> cropAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.cropItems));
+        ArrayAdapter<String> cropAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.cropItems));
         // Specify the layout to use when the list of choices appear+
         cropAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         cropSpinner.setAdapter(cropAdapter);
-
 
 
         /**
@@ -78,6 +66,7 @@ public class Profit extends AppCompatActivity  {
 
                 // region selected
                 serverEnable.setRegion(true);
+                toggleWaitingExecute(serverEnable);
 
 
             }
@@ -97,6 +86,7 @@ public class Profit extends AppCompatActivity  {
 
                 // region selected
                 serverEnable.setCrop(true);
+                toggleWaitingExecute(serverEnable);
 
             }
         });
@@ -112,7 +102,7 @@ public class Profit extends AppCompatActivity  {
             public void onClick(View v) {
 
 
-                if(serverEnable.getEnabled()==false){
+                if (serverEnable.getEnabled() == false) {
 
                     getServerData.setText("Choose Region/Crop");
 
@@ -121,114 +111,49 @@ public class Profit extends AppCompatActivity  {
 
                     // server request URL
                     int regionID = regionSpinner.getSelectedItemPosition();
-                    CreateURL partURL = new CreateURL(regionID);
-                    String serverURL = "http://server.farmtwat.com/Corn.php?"+partURL.getURL();
+                    int cropID = cropSpinner.getSelectedItemPosition();
+                    Log.d("regionID", regionID + "");
+                    Log.d("cropID ", cropID + "");
+
+                    Intent i = new Intent(Profit.this, CornProfit.class);
+                    i.putExtra("region", regionID);
+                    i.putExtra("crop", cropID);
+
+                    //start the activity with
+                    startActivity(i);
 
                     // create object and call AsyncTask execute method
-                   // new LongOperaton().execute(serverURL);
+                    // new LongOperaton().execute(serverURL);
                 }
 
             }
         });
-
-/**
- *
- * this is what happens when something is selected from spinners
- * theres nothing to do with this code for the time being
- * just going to keep it in case there needs to be some updates for the next round
- *
- *
-
-        regionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    }
 
 
+    private void toggleWaitingExecute(SetServerReady get) {
 
-            }
+        TextView waitExecute = (TextView) findViewById(R.id.profitWaiting);
+        TextView execute = (TextView) findViewById(R.id.profitExecute);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        if (get.getEnabled() == true) {
 
-            }
-        });
+            waitExecute.setVisibility(View.VISIBLE);
+            waitExecute.setText("Press the Execute button");
+            execute.setText("EXECUTE");
 
 
-        cropSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        } else{
 
-            }
+            waitExecute.setVisibility(View.VISIBLE);
+            waitExecute.setText("Choose a Region and a Crop");
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        }
 
     }
 
- */
 
-    class LongOperation extends AsyncTask<String, Void, JSONArray> {
-
-        @Override
-        protected JSONArray doInBackground(String... params) {
-            URL url;
-            HttpURLConnection urlConnection = null;
-            JSONArray response = new JSONArray();
-
-            try {
-                url = new URL(params[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                int responseCode = urlConnection.getResponseCode();
-
-                if(responseCode == HttpStatus.SC_OK){
-                    String responseString = readStream(urlConnection.getInputStream());
-                    Log.v("CatalogClient", responseString);
-                    response = new JSONArray(responseString);
-                }else{
-                    Log.v("CatalogClient", "Response code:"+ responseCode);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if(urlConnection != null)
-                    urlConnection.disconnect();
-            }
-
-            return response;
-        }
-
-
-        private String readStream(InputStream in) {
-            BufferedReader reader = null;
-            StringBuffer response = new StringBuffer();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return response.toString();
-            }
-        }
-
-
-
-
-
-    }
 }
+
+
+

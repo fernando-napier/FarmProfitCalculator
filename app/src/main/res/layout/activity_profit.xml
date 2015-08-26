@@ -65,9 +65,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Waiting for Execute..."
-        android:id="@+id/profitOutput"
+        android:visibility = "visible"
+        android:text="Choose a Region and a Crop"
+        android:id="@+id/profitWaiting"
         android:layout_below="@+id/profitButtonToSpinner"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
+

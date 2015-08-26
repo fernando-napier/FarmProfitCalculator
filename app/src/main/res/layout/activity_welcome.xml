@@ -8,17 +8,66 @@
 
     <!-- the corn image is weighted 2:1 width to height  -->
 
-    <ImageView
+    <Space android:id="@+id/cornProfitDummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
 
-        android:layout_width="150sp"
-        android:layout_height="100sp"
-        android:id="@+id/welcomeCorn"
-        android:src="@drawable/corn"
-        android:scaleType="fitXY"
-        android:layout_below="@+id/welcomeModelText"
-        android:layout_alignLeft="@+id/welcomeTitle"
-        android:layout_alignStart="@+id/welcomeTitle" />
+        />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:id="@+id/welcomeScrollImages"
+        android:layout_centerInParent="true"
 
+
+        >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/welcomeLinearLayout">
+
+                <ImageView
+
+                    android:layout_width="150sp"
+                    android:layout_height="150sp"
+                    android:id="@+id/welcomeCorn"
+                    android:src="@drawable/corn"
+                    android:scaleType="fitXY" />
+
+
+
+                <ImageView
+
+                    android:layout_width="150sp"
+                    android:layout_height="150sp"
+                    android:id="@+id/welcomeSoybean"
+                    android:src="@drawable/soybean"
+                    android:scaleType="fitXY" />
+
+                <ImageView
+
+                    android:layout_width="150sp"
+                    android:layout_height="150sp"
+                    android:id="@+id/welcomeCotton"
+                    android:src="@drawable/cotton"
+                    android:scaleType="fitXY" />
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+
+
+
+    </HorizontalScrollView>
     <!-- this USDA logo is 5:2 width to height -->
 
     <ImageView
@@ -35,19 +84,19 @@
         android:text="Predictive Model for Effective Farming"
         android:id="@+id/welcomeTitle"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:textSize="20sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check out the Model"
+        android:text="Check out the Model! \nclick the corn"
         android:id="@+id/welcomeModelText"
         android:layout_below="@+id/welcomeTitle"
-        android:paddingTop="40dp"
+        android:paddingTop="40sp"
         android:layout_alignLeft="@+id/welcomeCorn"
         android:layout_alignRight="@+id/welcomeCorn"
-        android:textAlignment="center"/>
+        android:gravity="center" />
 
 
 </RelativeLayout>

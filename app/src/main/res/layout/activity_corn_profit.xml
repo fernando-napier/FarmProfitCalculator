@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.fernando.farmingfarming.CornProfit"
+    android:id="@+id/cornProfitBackground">
+
+    <Space android:id="@+id/cornProfitDummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+
+        />
+
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Region/Crop"
+        android:id="@+id/cornProfitExecuteButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/cornProfitDummy" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Variables"
+        android:id="@+id/cornProfitChangeButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/cornProfitDummy"
+        android:layout_alignTop="@+id/cornProfitExecuteButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Gross"
+        android:id="@+id/cornProfitGrossText"
+        android:gravity="center"
+        android:layout_alignRight="@+id/cornProfitDummy"
+        android:layout_below="@+id/cornProfitTitle"
+        android:layout_alignLeft="@+id/cornProfitExecuteButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Costs"
+        android:id="@+id/cornProfitCostText"
+        android:gravity="center"
+        android:layout_alignRight="@+id/cornProfitChangeButton"
+        android:layout_alignLeft="@+id/cornProfitDummy"
+        android:layout_below="@+id/cornProfitTitle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Title"
+        android:id="@+id/cornProfitTitle"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:paddingBottom="10sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample text"
+        android:id="@+id/cornProfitGrossAmt"
+        android:layout_below="@+id/cornProfitGrossText"
+        android:layout_alignLeft="@+id/cornProfitGrossText"
+        android:layout_alignRight="@+id/cornProfitGrossText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample text"
+        android:id="@+id/cornProfitCostAmt"
+        android:layout_alignLeft="@+id/cornProfitCostText"
+        android:layout_alignRight="@+id/cornProfitCostText"
+        android:layout_below="@+id/cornProfitCostText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Profit"
+        android:id="@+id/cornProfitProfitText"
+        android:layout_below="@+id/cornProfitGrossAmt"
+        android:gravity="center"
+        android:layout_alignLeft="@+id/cornProfitGrossText"
+        android:layout_alignRight="@+id/cornProfitGrossText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample text"
+        android:id="@+id/cornProfitProfitAmt"
+        android:layout_below="@+id/cornProfitProfitText"
+        android:layout_alignLeft="@+id/cornProfitGrossText"
+        android:layout_alignRight="@+id/cornProfitGrossText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample text"
+        android:id="@+id/cornProfitChosenParams"
+        android:layout_above="@+id/cornProfitExecuteButton"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_alignLeft="@+id/cornProfitExecuteButton"
+        android:layout_alignRight="@+id/cornProfitCostText" />
+</RelativeLayout>
