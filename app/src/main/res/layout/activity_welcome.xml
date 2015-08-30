@@ -15,17 +15,17 @@
         android:visibility="invisible"
 
         />
-    <HorizontalScrollView
+    <com.example.fernando.farmingfarming.CenterHorizontalView
         android:layout_width="match_parent"
-        android:layout_height="150sp"
+        android:layout_height="200sp"
         android:id="@+id/welcomeScrollImages"
         android:layout_centerInParent="true"
 
 
-        >
+        android:layout_below="@+id/welcomeTitle">
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/welcomeLinearLayout">
 
                 <ImageView
@@ -34,7 +34,8 @@
                     android:layout_height="150sp"
                     android:id="@+id/welcomeCorn"
                     android:src="@drawable/corn"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    />
 
 
 
@@ -44,7 +45,8 @@
                     android:layout_height="150sp"
                     android:id="@+id/welcomeSoybean"
                     android:src="@drawable/soybean"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    />
 
                 <ImageView
 
@@ -52,22 +54,12 @@
                     android:layout_height="150sp"
                     android:id="@+id/welcomeCotton"
                     android:src="@drawable/cotton"
-                    android:scaleType="fitXY" />
-
-
-
-
-
-
-
+                    android:scaleType="fitXY"
+                    />
 
             </LinearLayout>
 
-
-
-
-
-    </HorizontalScrollView>
+    </com.example.fernando.farmingfarming.CenterHorizontalView>
     <!-- this USDA logo is 5:2 width to height -->
 
     <ImageView
@@ -90,13 +82,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check out the Model! \nclick the corn"
-        android:id="@+id/welcomeModelText"
-        android:layout_below="@+id/welcomeTitle"
-        android:paddingTop="40sp"
-        android:layout_alignLeft="@+id/welcomeCorn"
-        android:layout_alignRight="@+id/welcomeCorn"
-        android:gravity="center" />
+        android:text="Choose a crop"
+        android:id="@+id/welcomeSampleText"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/welcomeUSDA" />
 
 
 </RelativeLayout>
