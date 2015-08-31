@@ -57,9 +57,10 @@
         android:text="Costs"
         android:id="@+id/cornProfitCostText"
         android:gravity="center"
-        android:layout_alignRight="@+id/cornProfitChangeButton"
-        android:layout_alignLeft="@+id/cornProfitDummy"
-        android:layout_below="@+id/cornProfitTitle" />
+
+        android:layout_below="@+id/cornProfitProfitAmt"
+        android:layout_toLeftOf="@+id/cornProfitDummy"
+        android:layout_alignLeft="@+id/cornProfitGrossText" />
 
     <TextView
         android:layout_width="wrap_content"
