@@ -36,6 +36,7 @@ public class Welcome extends AppCompatActivity implements GoogleApiClient.Connec
 
         TextSliderView demoSlider = new TextSliderView(this);
         demoSlider.description("Game of Thrones")
+                .
                 .image("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
         slider.addSlider(demoSlider);
 
