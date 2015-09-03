@@ -1,16 +1,10 @@
 package com.example.fernando.farmingfarming;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -35,9 +29,9 @@ public class Welcome extends AppCompatActivity implements GoogleApiClient.Connec
         setContentView(R.layout.activity_welcome);
 
         TextSliderView demoSlider = new TextSliderView(this);
-        demoSlider.description("Game of Thrones")
-                .
-                .image("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+        //demoSlider.description("Game of Thrones")
+          //      .
+            //    .image("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
         slider.addSlider(demoSlider);
 
 
