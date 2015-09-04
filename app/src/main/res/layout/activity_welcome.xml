@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Welcome">
+    tools:context=".Welcome"
+    android:theme="@style/AppTheme">
 
     <!-- the corn image is weighted 2:1 width to height  -->
 
@@ -23,7 +24,8 @@
     <com.daimajia.slider.library.SliderLayout
         android:id="@+id/welcomeSlider"
         android:layout_width="match_parent"
-        android:layout_height="200sp">
+        android:layout_height="200sp"
+        android:layout_centerInParent="true">
 
 
     </com.daimajia.slider.library.SliderLayout>
@@ -34,7 +36,8 @@
         android:layout_height="40sp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/usdabanner" />
+        android:src="@drawable/usdabanner"
+        android:contentDescription="Sample Slider" />
 
     <TextView
         android:id="@+id/welcomeTitle"
@@ -45,7 +48,23 @@
         android:text="Predictive Model for Effective Farming"
         android:textSize="20sp" />
 
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcomeSpinner"
+        android:layout_above="@+id/welcomeUSDA"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
 
+    />
+    <TextView
+        android:id="@+id/welcomeSpinnerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/welcomeUSDA"
+        android:layout_centerHorizontal="true"
+        android:text="Choose A Region"
+         />
 
 
 </RelativeLayout>
