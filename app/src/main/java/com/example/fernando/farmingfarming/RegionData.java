@@ -12,11 +12,30 @@ public class RegionData {
     private String regionName;
     private int regionYear;
 
-    public RegionData(int id, String name, int year){
+    public RegionData(int id){
 
         regionID = id;
-        regionName = name;
-        regionYear = year;
+        regionYear = 2014;
+
+        switch (id){
+            case 0: regionName = "United States";
+                break;
+            case 1: regionName = "Heartland";
+                break;
+            case 2: regionName = "Northern Crescent";
+                break;
+            case 3: regionName = "Northern Great Plains";
+                break;
+            case 4: regionName = "Prairie Gateway";
+                break;
+            case 5: regionName = "Eastern Uplands";
+                break;
+            case 6: regionName = "Southern Seaboard";
+                break;
+            default: regionName = "Choose a Region";
+
+        }
+
     }
 
     /**

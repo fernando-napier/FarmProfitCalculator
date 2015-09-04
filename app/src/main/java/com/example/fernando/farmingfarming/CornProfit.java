@@ -1,14 +1,14 @@
 package com.example.fernando.farmingfarming;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.BarChart;
 
 public class CornProfit extends AppCompatActivity {
 
@@ -32,6 +32,7 @@ public class CornProfit extends AppCompatActivity {
         TextView cost = (TextView) findViewById(R.id.cornProfitCostAmt);
         TextView info = (TextView) findViewById(R.id.cornProfitChosenParams);
         TextView title = (TextView) findViewById(R.id.cornProfitTitle);
+        BarChart profitChart = (BarChart) findViewById(R.id.cornProfitBarChart);
 
 
         Button execute = (Button) findViewById(R.id.cornProfitExecuteButton);
@@ -52,7 +53,7 @@ public class CornProfit extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(CornProfit.this, Profit.class);
+                Intent i = new Intent(CornProfit.this, Welcome.class);
                 startActivity(i);
             }
         });

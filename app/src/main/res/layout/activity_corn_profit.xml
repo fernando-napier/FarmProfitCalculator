@@ -138,6 +138,18 @@
                 android:layout_below="@+id/cornProfitCostAmt"
                 android:textSize="10sp" />
 
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/cornProfitBarChart"
+                android:layout_width ="wrap_content"
+                android:layout_height = "wrap_content"
+                android:layout_alignLeft="@+id/cornProfitDummy"
+                android:layout_alignTop="@+id/cornProfitProfitText"
+                android:layout_alignBottom="@+id/cornProfitProfitAmt"
+                android:layout_alignRight="@+id/cornProfitChangeButton">
+
+
+            </com.github.mikephil.charting.charts.BarChart>
+
         </RelativeLayout>
 
     </ScrollView>

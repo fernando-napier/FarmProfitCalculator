@@ -7,7 +7,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
@@ -23,7 +28,7 @@ public class Welcome extends AppCompatActivity implements GoogleApiClient.Connec
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private SliderLayout slider;
-    private int region;
+    private RegionData region = null;
 
 
     @Override
@@ -44,6 +49,55 @@ public class Welcome extends AppCompatActivity implements GoogleApiClient.Connec
         slider.addSlider(cottonSlider);
 
 
+        final Spinner spinner = (Spinner) findViewById(R.id.welcomeSpinner);
+        final TextView spinnerText = (TextView) findViewById(R.id.welcomeSpinnerText);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+        //TODO: find something to do with this if statement.
+        if (checkGooglePlayServices() == false) {
+
+        }
+
+
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.regionItems, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appear
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        // make invisible because the texview shows "Select a state"
+
+        //TODO: set a cancel button
+
+        builder.setTitle("Choose a Region");
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+
+            // use which to set data accumulation
+            public void onClick(DialogInterface dialog, int which) {
+
+                region = new RegionData(which);
+                spinnerText.setText("" + region.getRegionName());
+
+
+            }
+        });
+
+        builder.create();
+
+        spinnerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.show();
+
+            }
+        });
+
+
+        //  spinner.setVisibility(View.VISIBLE);
+        // spinner.setPrompt("Choose a Region");
+
+
         /**
          * this works perfectly...just need to implement for all images.!!!
          */
@@ -51,40 +105,60 @@ public class Welcome extends AppCompatActivity implements GoogleApiClient.Connec
             @Override
             public void onSliderClick(BaseSliderView v) {
 
-                Log.d("corn", "image pressed");
+                if (region == null) {
 
-                AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
-                alert.setTitle("Corn Chosen");
-                alert.setMessage("Choose an option!");
-                alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Region Avg",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
+                    alert.setTitle("Error");
+                    alert.setMessage("Region not chosen!");
+                    alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Try Again",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                Intent i = new Intent(Welcome.this, CornProfit.class);
-                                i.putExtra("region", 0);
-                                i.putExtra("crop", 0);
-                                startActivity(i);
-                            }
-                        });
-                alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Customize",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    alert.show();
 
 
-                        });
-                alert.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
+                } else {
 
 
-                        });
+                    Log.d("corn", "image pressed");
 
-                alert.show();
+                    AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
+                    alert.setTitle("Corn Chosen");
+                    alert.setMessage("Choose an option!");
+                    alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Region Avg",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
+                                    Intent i = new Intent(Welcome.this, CornProfit.class);
+                                    i.putExtra("region", region.getRegionID());
+                                    i.putExtra("crop", 0);
+                                    startActivity(i);
+                                }
+                            });
+                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Customize",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+
+                            });
+                    alert.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+
+                            });
+
+                    alert.show();
+
+                }
             }
         });
 

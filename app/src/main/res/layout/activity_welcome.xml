@@ -48,7 +48,23 @@
         android:text="Predictive Model for Effective Farming"
         android:textSize="20sp" />
 
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcomeSpinner"
+        android:layout_above="@+id/welcomeUSDA"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
 
+    />
+    <TextView
+        android:id="@+id/welcomeSpinnerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/welcomeUSDA"
+        android:layout_centerHorizontal="true"
+        android:text="Choose A Region"
+         />
 
 
 </RelativeLayout>
