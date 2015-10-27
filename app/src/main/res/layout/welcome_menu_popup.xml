@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGreen"
+    android:padding="15sp">
+
+    <TextView
+        android:id="@+id/welcomeMenuTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_menu_title"
+        android:textSize="30sp"
+        android:textColor="@color/LightCyan"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuTitle"
+        android:text="@string/welcome_menu_paragraph1"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"
+        />
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph1"
+        android:text="@string/welcome_menu_paragraph2"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"/>
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph2"
+        android:text="@string/welcome_menu_paragraph3"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"/>
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph3"
+        android:text="@string/welcome_menu_paragraph4"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"/>
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph4"
+        android:text="@string/welcome_menu_paragraph5"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"/>
+
+    <TextView
+        android:id="@+id/welcomeMenuParagraph6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph5"
+        android:text="@string/welcome_menu_paragraph6"
+        android:textColor="@color/Ivory"
+        android:layout_marginBottom="10sp"/>
+
+    <Button
+        android:id="@+id/welcomeMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeMenuParagraph6"
+        android:text="Close"/>
+
+</RelativeLayout>

@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#444444"
+    android:orientation="vertical"
+    android:padding="10sp" >
+
+
+    <TextView
+        android:id="@+id/regionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Each state could have multiple regions."
+        android:textColor="@color/Ivory"
+        />
+
+    <com.example.touch.TouchImageView
+        android:id="@+id/regionImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/regionText"
+        android:layout_gravity="center"
+        android:src="@drawable/regions"
+        android:text="Close" />
+
+    <Button
+        android:id="@+id/regionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/regionImage"
+        android:text="Close"/>
+
+</RelativeLayout>
+
+

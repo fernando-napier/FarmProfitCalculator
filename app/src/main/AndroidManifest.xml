@@ -4,28 +4,25 @@
     package="com.example.fernando.farmingfarming" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <application
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_action"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
 
         <activity
             android:name=".Welcome"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Profit"
-            android:label="@string/title_activity_profit" >
         </activity>
         <activity
             android:name=".CornProfit"
@@ -34,6 +31,10 @@
         <activity
             android:name=".ChangeVariables"
             android:label="@string/title_activity_change_variables" >
+        </activity>
+        <activity
+            android:name=".CustomCornCost"
+            android:label="@string/title_activity_custom_corn_cost" >
         </activity>
     </application>
 

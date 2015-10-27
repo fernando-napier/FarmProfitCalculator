@@ -32,6 +32,8 @@ public class RegionData {
                 break;
             case 6: regionName = "Southern Seaboard";
                 break;
+            case 7: regionName = "Mississippi Portal";
+                break;
             default: regionName = "Choose a Region";
 
         }

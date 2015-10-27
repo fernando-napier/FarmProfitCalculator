@@ -17,9 +17,37 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
         android:visibility="invisible"
 
         />
+
+
+    <TextView
+        android:id="@+id/welcomeTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/welcome_slogan"
+        />
+    
+    <TextView
+        android:id="@+id/welcomeRegionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeTitleText"
+        android:text="Regions Image"
+        android:textColor="@color/DarkRed"
+        android:layout_marginTop="15sp"
+
+        />
+
+    <com.ortiz.touch.TouchImageView
+        android:id="@+id/welcomeTouchImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/regions"/>
 
     <com.daimajia.slider.library.SliderLayout
         android:id="@+id/welcomeSlider"
@@ -30,6 +58,20 @@
 
     </com.daimajia.slider.library.SliderLayout>
 
+    <Space
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/welcomeSliderSpace"
+        android:visibility="invisible"
+
+
+        android:layout_alignTop="@+id/welcomeSlider"
+        android:layout_alignLeft="@+id/welcomeSlider"
+        android:layout_alignBottom="@+id/welcomeSlider"
+        android:layout_alignRight="@+id/welcomeSlider" />
+
+
+
     <ImageView
         android:id="@+id/welcomeUSDA"
         android:layout_width="match_parent"
@@ -39,14 +81,27 @@
         android:src="@drawable/usdabanner"
         android:contentDescription="Sample Slider" />
 
+    <Space
+        android:id="@+id/welcomeSpace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcomeSlider"
+        android:layout_above="@id/welcomeUSDA"
+
+        />
+
     <TextView
-        android:id="@+id/welcomeTitle"
+        android:id="@+id/welcomeCropText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:gravity="center"
-        android:text="Predictive Model for Effective Farming"
-        android:textSize="20sp" />
+        android:text="Select a crop to continue"
+        android:textSize="20sp"
+        android:layout_alignTop="@+id/welcomeSpace"
+        android:layout_alignBottom="@+id/welcomeUSDA"
+        android:layout_marginTop="20sp" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -57,14 +112,7 @@
         android:visibility="invisible"
 
     />
-    <TextView
-        android:id="@+id/welcomeSpinnerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/welcomeUSDA"
-        android:layout_centerHorizontal="true"
-        android:text="Choose A Region"
-         />
+
 
 
 </RelativeLayout>

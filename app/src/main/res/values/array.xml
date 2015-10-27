@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="regionItems">
+    <string-array name="regionItemsCorn">
 
         <item> United States </item>
         <item> Heartland </item>
@@ -11,6 +11,20 @@
         <item> Southern Seaboard </item>
 
     </string-array>
+
+    <string-array name="regionItemsSoybean">
+
+        <item> United States </item>
+        <item> Heartland </item>
+        <item> Northern Crescent </item>
+        <item> Norther Great Plains </item>
+        <item> Prairie Gateway </item>
+        <item> Eastern Uplands </item>
+        <item> Southern Seaboard </item>
+        <item> Mississippi Portal </item>
+
+    </string-array>
+
     <string-array name="cropItems">
 
         <item> Corn </item>

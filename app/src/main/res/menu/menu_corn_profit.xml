@@ -4,4 +4,7 @@
     tools:context="com.example.fernando.farmingfarming.CornProfit">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <TextView android:id="@+id/corn_profit_title"
+        android:ellipsize="marquee"
+        />
 </menu>

@@ -1,9 +1,24 @@
 <resources>
-    <string name="app_name">FarmingFarming</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Farm Profit Calculator</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_profit">Profit</string>
-    <string name="title_activity_corn_profit">CornProfit</string>
+    <string name="title_activity_corn_profit">Predictive Model</string>
     <string name="title_activity_change_variables">ChangeVariables</string>
+    <string name="title_activity_custom_corn_cost">Customize Variables</string>
+    <string name="welcome_slogan">Tracking cost infow and outflow is essential for running a profitable business. Farm Profit Calculator is your mobile personal accountant.</string>
+    <string name="linkCBOTCorn"><a href="http://www.cmegroup.com/trading/agricultural/grain-and-oilseed/corn.html">Click here to get the up-to-date futures pricing for corn</a></string>
+    <string name="linkCBOTSoy"><a href="http://www.cmegroup.com/trading/agricultural/grain-and-oilseed/soybean.html">Click here to get the up-to-date futures pricing for soybean</a></string>
+    <string name="welcome_menu_title">Welcome to Farm Profit Calculator!</string>
+    <string name="welcome_menu_paragraph1">In order to get to model the crops you need to choose a crop and your region. </string>
+    <string name="welcome_menu_paragraph2">1) There is a regional image you can click on to get the specific region at your location. Each state may have multiple regions, be sure to choose the correct region by checking out the USDA map.</string>
+    <string name="welcome_menu_paragraph3">2) Click on the crop you\'d like to explore. Then, enter the region which you are located at.</string>
+    <string name="welcome_menu_paragraph4">3) You can choose to either enter your own values or go directly to the model (the model will only show regional averages until you set your own)</string>
+    <string name="welcome_menu_paragraph5">Also, the USDA banner at the bottom leads to our About page.</string>
+    <string name="welcome_menu_paragraph6">Thanks for trying out our app!</string>
 </resources>
+
+
+
+
+
+
