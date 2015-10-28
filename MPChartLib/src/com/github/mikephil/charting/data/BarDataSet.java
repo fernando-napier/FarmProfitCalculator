@@ -44,6 +44,8 @@ public class BarDataSet extends BarLineScatterCandleDataSet<BarEntry> {
         calcEntryCountIncludingStacks(yVals);
     }
 
+
+
     @Override
     public DataSet<BarEntry> copy() {
 
