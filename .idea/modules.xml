@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AgApp.iml" filepath="$PROJECT_DIR$/AgApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidImageSlider/AndroidImageSlider.iml" filepath="$PROJECT_DIR$/AndroidImageSlider/AndroidImageSlider.iml" />
       <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChartLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/touchImageView/touchImageView.iml" filepath="$PROJECT_DIR$/touchImageView/touchImageView.iml" />
     </modules>
   </component>
