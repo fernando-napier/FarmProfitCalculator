@@ -2,13 +2,7 @@ package com.example.fernando.farmingfarming;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by fernando on 8/24/15.
