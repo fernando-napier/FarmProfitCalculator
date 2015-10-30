@@ -10,15 +10,13 @@
     tools:context=".Welcome"
     android:theme="@style/AppTheme">
 
-    <!-- the corn image is weighted 2:1 width to height  -->
 
     <Space
-        android:id="@+id/cornProfitDummy"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible"
+        android:id="@+id/welcomeSpace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeSlider"
+        android:layout_above="@+id/welcomeUSDA"
 
         />
 
@@ -35,12 +33,13 @@
         android:id="@+id/welcomeRegionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/welcomeTitleText"
         android:text="Regions Image"
-        android:textColor="@color/DarkRed"
-        android:layout_marginTop="15sp"
-
-        />
+        android:textColor="@color/White"
+        android:background="@color/gray"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:layout_alignBottom="@+id/welcomeSlider"
+        android:layout_marginBottom="68sp" />
 
     <com.ortiz.touch.TouchImageView
         android:id="@+id/welcomeTouchImage"
@@ -58,19 +57,6 @@
 
     </com.daimajia.slider.library.SliderLayout>
 
-    <Space
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/welcomeSliderSpace"
-        android:visibility="invisible"
-
-
-        android:layout_alignTop="@+id/welcomeSlider"
-        android:layout_alignLeft="@+id/welcomeSlider"
-        android:layout_alignBottom="@+id/welcomeSlider"
-        android:layout_alignRight="@+id/welcomeSlider" />
-
-
 
     <ImageView
         android:id="@+id/welcomeUSDA"
@@ -81,14 +67,7 @@
         android:src="@drawable/usdabanner"
         android:contentDescription="Sample Slider" />
 
-    <Space
-        android:id="@+id/welcomeSpace"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/welcomeSlider"
-        android:layout_above="@id/welcomeUSDA"
 
-        />
 
     <TextView
         android:id="@+id/welcomeCropText"
@@ -99,6 +78,7 @@
         android:gravity="center"
         android:text="Select a crop to continue"
         android:textSize="20sp"
+        android:textStyle="italic|normal"
         android:layout_alignTop="@+id/welcomeSpace"
         android:layout_alignBottom="@+id/welcomeUSDA"
         android:layout_marginTop="20sp" />

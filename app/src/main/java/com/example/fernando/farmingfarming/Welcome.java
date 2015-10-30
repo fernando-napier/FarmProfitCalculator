@@ -2,23 +2,16 @@ package com.example.fernando.farmingfarming;
 
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,30 +21,29 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ortiz.touch.*;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class Welcome extends AppCompatActivity {
 
-    private static int REQUEST_CODE_RECOVER_PLAY_SERVICES = 200;
+    /*
+        The first three data members are used in gathering information
+        for the region and crop to be used.
+
+        The last one is used as part of the tutorial that shows up on the app
+     */
 
 
     private SliderLayout slider;
     private RegionData region = null;
     private int crop;
+    private PopupWindow pWindow;
 
 
     @Override
@@ -65,34 +57,41 @@ public class Welcome extends AppCompatActivity {
 
         slider = (SliderLayout) findViewById(R.id.welcomeSlider);
 
-        final TextSliderView cornSlider = new TextSliderView(this);
+        TextSliderView cornSlider = new TextSliderView(this);
+        TextSliderView soybeanSlider = new TextSliderView(this);
+
+        // add an image of corn to the scrolling view
         cornSlider.description("Corn").image(R.drawable.corn);
         slider.addSlider(cornSlider);
-        TextSliderView soybeanSlider = new TextSliderView(this);
+
+        // add an image of soybeans to the scrolling view
         soybeanSlider.description("Soybean").image(R.drawable.soybean);
         slider.addSlider(soybeanSlider);
 
 
-        final Spinner spinner = (Spinner) findViewById(R.id.welcomeSpinner);
-        final TextView spinnerText = (TextView) findViewById(R.id.welcomeCropText);
-        // final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Spinner SPINNER = (Spinner) findViewById(R.id.welcomeSpinner);
+        final TextView SPINNER_TEXT = (TextView) findViewById(R.id.welcomeCropText);
+        final TextView REGION_TEXT = (TextView) findViewById(R.id.welcomeRegionText);
 
-        final TextView regionText = (TextView) findViewById(R.id.welcomeRegionText);
-        regionText.setOnClickListener(new View.OnClickListener() {
+        // REGION_TEXT being clicked pops up an image of the US divided by regions
+        REGION_TEXT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String string = regionText.getText().toString();
-                Log.d("main class text", string);
+                String string = REGION_TEXT.getText().toString();
+
+                // the slider automatically stops the scrolling from the slider, as this was
+                // causing an error when zooming in on the region image
                 slider.stopAutoCycle();
+
 
                 if ((string.equalsIgnoreCase("Help With Choosing a Region") || (string.equalsIgnoreCase("regions image")))) {
 
-                    regionText.setText("Close Region Image");
-                    showPopup();
+                    REGION_TEXT.setText("Close Region Image");
+                    showRegionalImage();
 
                 } else if (string.equalsIgnoreCase("Close Region Image")) ;
-                regionText.setText("Help With Choosing a Region");
+                REGION_TEXT.setText("Help With Choosing a Region");
 
 
             }
@@ -100,7 +99,7 @@ public class Welcome extends AppCompatActivity {
 
 
         /**
-         * this works perfectly...just need to implement for all images.!!!
+         * the next few onclicklisteners are for the images in the slider view
          */
         cornSlider.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
             @Override
@@ -111,31 +110,14 @@ public class Welcome extends AppCompatActivity {
 
                 if (region == null) {
 
-                    AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
-                    alert.setTitle("Getting Started");
-                    alert.setMessage("In order to view a model for our application you would first need to choose a region of study.");
-                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "CHOOSE A REGION",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    createRegionDialogBox(spinner, spinnerText, 0);
-
-
-                                }
-                            });
-
-                    //alert.setCanceledOnTouchOutside(false);
-                    alert.show();
-
+                    initialDialogPopup(SPINNER, crop);
 
                 }
 
 
                 if (region != null) {
 
-
-                    createModelDialogBox(spinner, spinnerText, crop);
-
+                    createModelDialogBox(SPINNER, crop);
 
                 }
             }
@@ -150,22 +132,7 @@ public class Welcome extends AppCompatActivity {
 
                 if (region == null) {
 
-                    AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
-                    alert.setTitle("Getting Started");
-                    alert.setMessage("In order to view a model for our application you would first need to choose a region of study.");
-                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "CHOOSE A REGION",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    createRegionDialogBox(spinner, spinnerText, 1);
-
-
-                                }
-                            });
-
-                    //alert.setCanceledOnTouchOutside(false);
-                    alert.show();
-
+                    initialDialogPopup(SPINNER, crop);
 
                 }
 
@@ -173,7 +140,7 @@ public class Welcome extends AppCompatActivity {
                 if (region != null) {
 
 
-                    createModelDialogBox(spinner, spinnerText, crop);
+                    createModelDialogBox(SPINNER, crop);
 
 
                 }
@@ -181,25 +148,93 @@ public class Welcome extends AppCompatActivity {
         });
 
         if (isFirstTime()) {
-            initiatePopupWindow();
+
+            initiateTutorial();
+
         }
+
+        TextView regionImage = (TextView) findViewById(R.id.welcomeRegionText);
+        regionImage.bringToFront();
 
 
     }
 
+    // this method is used to open up the tutorial the first time the app is opened
+    // its the only point at which a sharedpreference is used
     private boolean isFirstTime() {
+
+        // create the shared preference
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        boolean ranBefore = preferences.getBoolean("WelcomeRanBefore", false);
+
+        // set it to false if it doesn't exist
+        String value = "WelcomeRandBefore";
+        boolean ranBefore = preferences.getBoolean(value, false);
+
+        // this if statement only runs once,
         if (!ranBefore) {
-            // first time
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("WelcomeRanBefore", true);
+            editor.putBoolean(value, true);
             editor.commit();
         }
         return !ranBefore;
     }
 
-    private void showPopup() {
+
+    // create a tutorial from welcome_menu_popup layout
+    private void initiateTutorial() {
+        try {
+            // We need to get the instance of the LayoutInflater
+            LayoutInflater inflater = (LayoutInflater) Welcome.this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View layout = inflater.inflate(R.layout.welcome_menu_popup,
+                    (ViewGroup) findViewById(R.id.popup_element));
+            pWindow = new PopupWindow(layout, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
+            findViewById(R.id.welcomeBackground).post(new Runnable() {
+                @Override
+                public void run() {
+                    pWindow.showAtLocation(layout, Gravity.TOP, 0, 0);
+
+                }
+            });
+
+            // button to be able to close the popup
+            Button btnClosePopup = (Button) layout.findViewById(R.id.welcomeMenuButton);
+            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pWindow.dismiss();
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // this is a guided dialog that simply gives the user an explanation that they need to
+    // select a region after they select a crop
+    private void initialDialogPopup(final Spinner SPINNER, final int CROP) {
+        AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
+        alert.setTitle("Getting Started");
+        alert.setMessage("In order to view a model for our application you would first need to choose a region of study.");
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "CHOOSE A REGION",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        createRegionDialogBox(SPINNER, CROP);
+
+                    }
+                });
+
+        // without show() the dialog would not pop up
+        alert.show();
+    }
+
+
+    // this method opens the regions image as a TouchImageView, allowing users to zoom
+    // we are bringing the regiontext to front in order to allow for closing of the region image
+    private void showRegionalImage() {
 
         final TextView regionText = (TextView) findViewById(R.id.welcomeRegionText);
         regionText.setText("Close Region Image");
@@ -209,6 +244,8 @@ public class Welcome extends AppCompatActivity {
         regionText.bringToFront();
         regionText.setText("Close Region Image");
 
+        //single tap resets the image to the original size
+        // double tap zooms into the image
         regionImage.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -230,6 +267,8 @@ public class Welcome extends AppCompatActivity {
                 return false;
             }
         });
+
+        // this click listener closes the
         regionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,9 +276,11 @@ public class Welcome extends AppCompatActivity {
                 String string = regionText.getText().toString();
                 Log.d("popup text", string);
 
+                // if the
                 if (string.equalsIgnoreCase("Help With Choosing a Region")) {
                     Log.d("showpopup", "true");
                     regionImage.setVisibility(View.VISIBLE);
+                    regionImage.resetZoom();
 
 
                     regionImage.bringToFront();
@@ -263,9 +304,8 @@ public class Welcome extends AppCompatActivity {
      * from the which int chosen, then region then is instatiated
      *
      * @param spinner
-     * @param spinnerText
      */
-    private void createRegionDialogBox(final Spinner spinner, final TextView spinnerText, int id) {
+    private void createRegionDialogBox(final Spinner spinner, int id) {
 
         final int cropID = id;
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -284,7 +324,6 @@ public class Welcome extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-        // make invisible because the texview shows "Select a state"
 
         //TODO: set a cancel button
 
@@ -296,8 +335,8 @@ public class Welcome extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 region = new RegionData(which);
-                //spinnerText.setText("" + region.getRegionName());
-                createModelDialogBox(spinner, spinnerText, cropID);
+
+                createModelDialogBox(spinner, cropID);
 
 
             }
@@ -309,14 +348,16 @@ public class Welcome extends AppCompatActivity {
 
     }
 
-    //TODO figure out why this method passes a textview
-    private void createModelDialogBox(final Spinner spinner, final TextView spinnerText, int id) {
+    //This method allows a user to either go to the next activity and set their own variables
+    // or it can allow you to change the chosen region
+    private void createModelDialogBox(final Spinner spinner, int id) {
 
         AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
 
         String name;
         final int cropID = id;
 
+        // get the string of the crop for setting the message of the alert dialog
         switch (cropID) {
             case 0:
                 name = "Corn";
@@ -331,41 +372,13 @@ public class Welcome extends AppCompatActivity {
 
         alert.setTitle("Model Variables Ready");
         alert.setMessage("The model will show " + name + " averages for the " + region.getRegionName());
- /*       alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Go to Model",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent i = new Intent(Welcome.this, CornProfit.class);
-                        ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
-                        cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
-                        i.putParcelableArrayListExtra("crops", cropStatsArrayList);
-                        final ProgressDialog RENDER = ProgressDialog.show(Welcome.this, "", "Rendering...");
-                        RENDER.setCancelable(true);
-
-
-                        new Timer().schedule(
-                                new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        RENDER.dismiss();
-
-                                    }
-                                },
-                                2000L
-                        );
-
-                        startActivity(i);
-
-
-                    }
-                });*/
-
-
         alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Set Own Values",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+                        // this intent passes a parcelable arraylist of size 1 with only the regional average
+                        // this is because the other activities could have multiple objects within the arraylist
                         Intent i = new Intent(Welcome.this, CustomCornCost.class);
                         ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
                         cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
@@ -374,49 +387,16 @@ public class Welcome extends AppCompatActivity {
 
                     }
                 });
-
+        // if this button is pressed then it opens the regional dialog
         alert.setButton(AlertDialog.BUTTON_POSITIVE, "Change Region", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                createModelDialogBox(spinner, spinnerText, cropID);
+                createRegionDialogBox(spinner, cropID);
             }
         });
 
         alert.show();
 
-    }
-
-    private PopupWindow pWindow;
-
-    private void initiatePopupWindow() {
-        try {
-// We need to get the instance of the LayoutInflater
-            LayoutInflater inflater = (LayoutInflater) Welcome.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final View layout = inflater.inflate(R.layout.welcome_menu_popup,
-                    (ViewGroup) findViewById(R.id.popup_element));
-            pWindow = new PopupWindow(layout, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
-            findViewById(R.id.welcomeBackground).post(new Runnable() {
-                @Override
-                public void run() {
-                    pWindow.showAtLocation(layout, Gravity.TOP, 0, 0);
-
-                }
-            });
-
-
-            Button btnClosePopup = (Button) layout.findViewById(R.id.welcomeMenuButton);
-            btnClosePopup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pWindow.dismiss();
-
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
