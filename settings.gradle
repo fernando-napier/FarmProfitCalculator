@@ -1,2 +1,2 @@
-include ':app', ':library', ':MPChartLib'
-include ':touchImageView'
+include ':app', ':MPChartLib'
+include ':touchImageView',':AndroidImageSlider'
