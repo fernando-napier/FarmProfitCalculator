@@ -15,6 +15,8 @@
     <string name="welcome_menu_paragraph4">3) You can choose to either enter your own values or go directly to the model (the model will only show regional averages until you set your own)</string>
     <string name="welcome_menu_paragraph5">Also, the USDA banner at the bottom leads to our About page.</string>
     <string name="welcome_menu_paragraph6">Thanks for trying out our app!</string>
+    <string name="title_activity_model">Model</string>
+    <string name="title_activity_custom">Custom</string>
 </resources>
 
 

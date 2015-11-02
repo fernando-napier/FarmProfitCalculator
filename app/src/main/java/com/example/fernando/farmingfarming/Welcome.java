@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -70,7 +72,6 @@ public class Welcome extends AppCompatActivity {
 
 
         final Spinner SPINNER = (Spinner) findViewById(R.id.welcomeSpinner);
-        final TextView SPINNER_TEXT = (TextView) findViewById(R.id.welcomeCropText);
         final TextView REGION_TEXT = (TextView) findViewById(R.id.welcomeRegionText);
 
         // REGION_TEXT being clicked pops up an image of the US divided by regions
@@ -79,6 +80,7 @@ public class Welcome extends AppCompatActivity {
             public void onClick(View v) {
 
                 String string = REGION_TEXT.getText().toString();
+                Log.d("string", string);
 
                 // the slider automatically stops the scrolling from the slider, as this was
                 // causing an error when zooming in on the region image
@@ -86,12 +88,11 @@ public class Welcome extends AppCompatActivity {
 
 
                 if ((string.equalsIgnoreCase("Help With Choosing a Region") || (string.equalsIgnoreCase("regions image")))) {
-
-                    REGION_TEXT.setText("Close Region Image");
                     showRegionalImage();
 
-                } else if (string.equalsIgnoreCase("Close Region Image")) ;
-                REGION_TEXT.setText("Help With Choosing a Region");
+                } else if (string.equalsIgnoreCase("Close Region Image")) {
+                    REGION_TEXT.setText("Help With Choosing a Region");
+                }
 
 
             }
@@ -136,12 +137,9 @@ public class Welcome extends AppCompatActivity {
 
                 }
 
-
                 if (region != null) {
 
-
                     createModelDialogBox(SPINNER, crop);
-
 
                 }
             }
@@ -152,10 +150,6 @@ public class Welcome extends AppCompatActivity {
             initiateTutorial();
 
         }
-
-        TextView regionImage = (TextView) findViewById(R.id.welcomeRegionText);
-        regionImage.bringToFront();
-
 
     }
 
@@ -196,6 +190,10 @@ public class Welcome extends AppCompatActivity {
 
                 }
             });
+
+            // make the tutorial transparent
+            pWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 
             // button to be able to close the popup
             Button btnClosePopup = (Button) layout.findViewById(R.id.welcomeMenuButton);
@@ -249,15 +247,20 @@ public class Welcome extends AppCompatActivity {
         regionImage.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
+                Log.d("this", "onsingletapconfirmed");
                 regionImage.resetZoom();
+                regionText.setText("Close Region Image");
+                regionText.bringToFront();
                 return false;
             }
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                Log.d("image", "ondoubletap");
 
                 regionImage.resetZoom();
                 regionText.setText("Close Region Image");
+                regionImage.bringToFront();
 
                 return false;
             }
@@ -277,17 +280,18 @@ public class Welcome extends AppCompatActivity {
                 Log.d("popup text", string);
 
                 // if the
-                if (string.equalsIgnoreCase("Help With Choosing a Region")) {
-                    Log.d("showpopup", "true");
+                if (string.equalsIgnoreCase("Help With Choosing a Region") || string.equalsIgnoreCase("Regions Image")) {
+                    Log.d("within method", "help/regions");
                     regionImage.setVisibility(View.VISIBLE);
+                    regionText.setText("Close Region Image");
                     regionImage.resetZoom();
 
 
                     regionImage.bringToFront();
-                    regionText.bringToFront();
+                    //regionText.bringToFront();
 
                 } else if (string.equalsIgnoreCase("Close Region Image")) {
-                    Log.d("do not popup", "true");
+                    Log.d("within method", "close image");
                     regionText.setText("Help With Choosing a Region");
                     regionImage.setVisibility(View.INVISIBLE);
                 }
@@ -379,7 +383,7 @@ public class Welcome extends AppCompatActivity {
 
                         // this intent passes a parcelable arraylist of size 1 with only the regional average
                         // this is because the other activities could have multiple objects within the arraylist
-                        Intent i = new Intent(Welcome.this, CustomCornCost.class);
+                        Intent i = new Intent(Welcome.this, Custom.class);
                         ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
                         cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
                         i.putParcelableArrayListExtra("crops", cropStatsArrayList);

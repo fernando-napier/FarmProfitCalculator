@@ -2,17 +2,18 @@ package com.example.fernando.farmingfarming;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * Created by fernando on 8/24/15.
  * <p/>
- * to use for the time being
- * so as to not use the server data
- * and as an example of what the app
- * will be able to do
+ * this class holds the regional averages for all regions for both soybean and corn
  */
-public class CropStats implements Parcelable{
+
+// this class is parcelable because the cropstat data needs to be
+// transferred from activity to activity
+public class CropStats implements Parcelable {
 
     private int id;
     private int region;
@@ -20,7 +21,7 @@ public class CropStats implements Parcelable{
     private String regionName;
     private String cropName;
 
-    // gross value of Returnsion
+    // gross value of Returns
     private float primaryReturns;
     private float secondaryReturns;
     private float totalReturns;
@@ -45,6 +46,7 @@ public class CropStats implements Parcelable{
     private float generalFarmOverhead; //14
     private float totalOverheadCost; //15
 
+    // miscellaneous costs not covered with all other costs
     private float miscellaneous;
 
     //total cost
@@ -65,11 +67,14 @@ public class CropStats implements Parcelable{
 
 
     /**
-     * 7 regions
-     * 3 or 4 crops
+     * 8 regions
+     * <p/>
+     * <p/>
+     * this particular constructor is to be used when the stats need to default
+     * to the regional averages
      *
      * @param regionID
-     * @param cropID   this shows the default for specifically corn
+     * @param cropID
      */
 
     public CropStats(int cropID, int regionID) {
@@ -93,19 +98,18 @@ public class CropStats implements Parcelable{
 
 
     /**
-     * getStats() method is used to get the default values for corn for each region
+     * getRegionalAverage() method is used to get the default values for corn for each region
      */
 
     private void getRegionalAverage() {
 
+        // string that has two numbers, one for crop
+        // and one for region
         String intermediate = crop + "" + region;
 
 
-        /**
-         * corn class will
-         */
-
-
+        // this is a giant switch statement depending on which
+        // region and crop you are getting data for
         switch (intermediate) {
 
             //corn usa
@@ -792,6 +796,9 @@ public class CropStats implements Parcelable{
 
     }
 
+
+    // giant list of setters and getters
+
     public int getSizeAcresPlanted() {
         return sizeAcresPlanted;
     }
@@ -804,16 +811,8 @@ public class CropStats implements Parcelable{
         return region;
     }
 
-    public void setRegion(int region) {
-        this.region = region;
-    }
-
     public int getCrop() {
         return crop;
-    }
-
-    public void setCrop(int crop) {
-        this.crop = crop;
     }
 
     public String getRegionName() {
@@ -849,7 +848,7 @@ public class CropStats implements Parcelable{
     }
 
     public float getTotalReturns() {
-        return  price * yield;
+        return price * yield;
     }
 
     public float getSeed() {
@@ -975,17 +974,13 @@ public class CropStats implements Parcelable{
                 costOfLandRentalRate + taxesInsurance);
     }
 
-    public void setMiscellaneous(float miscellaneous){
+    public void setMiscellaneous(float miscellaneous) {
         this.miscellaneous = miscellaneous;
 
     }
 
-    public float getMiscellaneous(){
+    public float getMiscellaneous() {
         return miscellaneous;
-    }
-
-    public float getTotalCost() {
-        return (getTotalOperationalCosts() + getTotalOverheadCost() + getMiscellaneous());
     }
 
 
@@ -1013,16 +1008,6 @@ public class CropStats implements Parcelable{
         this.id = id;
     }
 
-    public String getProfitString() {
-        float profit = (float) (totalReturns - totalCost);
-        return String.format("%.2f", profit);
-    }
-
-    public float getProfitFloat() {
-        float profit = (getTotalReturns() - getTotalCost());
-        return profit;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -1031,10 +1016,20 @@ public class CropStats implements Parcelable{
         return title;
     }
 
+    public float getProfitFloat() {
+        float profit = (getTotalReturns() - getTotalCost());
+        return profit;
+    }
+
+    // to keep this dynamic, we allow users to set their individual costs but the
+    // total cost is gotten, not set
+    public float getTotalCost() {
+        return (getTotalOperationalCosts() + getTotalOverheadCost() + getMiscellaneous());
+    }
+
     /*
         if the profit is positive, then calculate the yield for breaking even
         definition of breakeven: yield at which price of corn is equal to the inputs
-        TODO: find out what to do if profit is negative (aka a loss)
      */
     public float getYieldBreakEven() {
 
@@ -1137,6 +1132,10 @@ public class CropStats implements Parcelable{
         return result;
     }
 
+    // this method is unordered because only due to the bar charts used
+    // this allows for the regional values to be in descending order but
+    // the custom values match up with the regional values even if they are
+    // not in descending order
     public ArrayList<Result> getUnorderedCostValues() {
 
         ArrayList<Result> result = new ArrayList<>();
@@ -1159,7 +1158,10 @@ public class CropStats implements Parcelable{
     }
 
     /**
-     * //TODO: figure out how to both arrange the float values and indexes alternating between highest and lowest
+     * this method takes the pie result arraylist and reorders them to stagger
+     * so that the arraylist has large values next to small values
+     * this method is only for the pie chart as some slices can be negligible in size and not noticable
+     * unless sandwiched between bigger pie slices
      */
     public ArrayList<Result> getOrderedPieValues(ArrayList<Result> result) {
 
@@ -1216,6 +1218,7 @@ public class CropStats implements Parcelable{
         return index;
     }
 
+    // the categories that will be represented on the inputs pie and bar chart
     public String getIndexString(int index) {
         String indexString;
 
@@ -1268,6 +1271,11 @@ public class CropStats implements Parcelable{
     }
 
 
+    /**
+     * these next few methods are the parcelable portion of the cropstats class
+     *
+     * @param in
+     */
     protected CropStats(Parcel in) {
         id = in.readInt();
         region = in.readInt();

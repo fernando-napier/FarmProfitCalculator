@@ -230,17 +230,8 @@ public class DatabaseStats extends SQLiteOpenHelper {
 
     }
 
-    //TODO: not quite sure if this method will be important.
-    // Getting All Contacts
-    public List<CropStats> getAllContacts() {
-        List<CropStats> cropList = null;
 
-        return cropList;
-
-    }
-
-
-    // Getting contacts Count
+    // Getting cropstats count
     public int getCropStatsCount() {
         String countQuery = "SELECT  * FROM " + TABLE_STATS;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -254,7 +245,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
     }
 
 
-    // Updating single contact
+    // Updating single cropstat
     public int updateCrop(CropStats crop, String title) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -298,7 +289,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
     }
 
 
-    // Deleting single contact
+    // Deleting single cropstat
     public void deleteCropStat(CropStats crop) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STATS, KEY_ID + " = ?", new String[]{
@@ -309,6 +300,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
     }
 
     // Deleting single contact
+    // Only used for debugging purposes
     public void deleteAllCrops() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STATS, null, null);
@@ -316,9 +308,9 @@ public class DatabaseStats extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<CropStats> getCropRegionCropStats(String crop, String region, SQLiteDatabase db) {
+    public ArrayList<CropStats> getCropRegionCropStats(String crop, String region) {
 
-        db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
 
         String whereClause = KEY_CROP + " = ? AND " + KEY_REGION + "= ? ";
@@ -342,7 +334,6 @@ public class DatabaseStats extends SQLiteOpenHelper {
 
         Log.d("movetofirst", "" + cursor.moveToFirst());
         if (cursor != null) {
-            Log.d("how many cursors", "" + cursor.getCount());
 
 
             while (!cursor.isAfterLast()) {
@@ -384,9 +375,6 @@ public class DatabaseStats extends SQLiteOpenHelper {
 
 
         }
-
-
-        Log.d("number of crops", "" + list.size());
 
 
         return list;
