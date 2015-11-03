@@ -57,6 +57,33 @@ public class Model extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model);
 
+        // check for the togle button, and alternate between graphs being visible/ invisible
+        final ToggleButton toggle = (ToggleButton) findViewById(R.id.modelToggleButton);
+        toggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean on = toggle.isChecked();
+
+                PieChart pie = (PieChart) findViewById(R.id.modelInputsPieChart);
+                PieChart pie1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
+                HorizontalBarChart bar = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
+
+                if (on) {
+
+                    pie.setVisibility(View.INVISIBLE);
+                    pie1.setVisibility(View.INVISIBLE);
+                    bar.setVisibility(View.VISIBLE);
+                } else if (!on) {
+                    pie.setVisibility(View.VISIBLE);
+                    pie1.setVisibility(View.VISIBLE);
+                    bar.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
+
+
 
         Bundle bundle = getIntent().getExtras();
 
@@ -88,7 +115,7 @@ public class Model extends AppCompatActivity {
          */
 
         // create the
-        HorizontalBarChart inputBarChart = (HorizontalBarChart) findViewById(R.id.cornInputsBarChart);
+        HorizontalBarChart inputBarChart = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
         inputBarChart.setDrawBarShadow(true);
         inputBarChart.setDrawValueAboveBar(true);
         inputBarChart.setDescription("");
@@ -124,12 +151,13 @@ public class Model extends AppCompatActivity {
         // the only way for a chart to render is to invalidate it
         BarData costData = getBarChartData(cropStatsArrayList.get(0), cropStatsArrayList.get(1));
         inputBarChart.setData(costData);
+        inputBarChart.setOnChartValueSelectedListener(listener);
         inputBarChart.invalidate();
 
 
         //TODO:Make a second invisible piechart in the same location as the original piechart
         //TODO:that allows the user to toggle from the default to custom views
-        PieChart pieCostChart = (PieChart) findViewById(R.id.cornInputsPieChart);
+        PieChart pieCostChart = (PieChart) findViewById(R.id.modelInputsPieChart);
         pieCostChart.setDescription("");
 
         // pie data used for the pie chart that overlays the horizontal bar chart
@@ -154,7 +182,7 @@ public class Model extends AppCompatActivity {
                 // need to get the chart in order to change it
                 // need to reorder the result data to mimmick the pie data
                 // need to set the string available when searching through the data
-                PieChart pieChart1 = (PieChart) findViewById(R.id.cornInputsPieChart);
+                PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart);
                 ArrayList<CropStats.Result> result = REGIONAL_AVERAGE.getOrderedPieValues(REGIONAL_AVERAGE.getOrderedCostValues());
 
 
@@ -171,7 +199,7 @@ public class Model extends AppCompatActivity {
             public void onNothingSelected() {
 
 
-                PieChart pieChart1 = (PieChart) findViewById(R.id.cornInputsPieChart);
+                PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart);
                 NumberFormat nf = NumberFormat.getCurrencyInstance();
                 String total = nf.format(REGIONAL_AVERAGE.getTotalCost());
                 pieChart1.setCenterText("Regional Cost: " + total);
@@ -181,7 +209,7 @@ public class Model extends AppCompatActivity {
         });
 
         if (cropStatsArrayList.size() > 1) {
-            PieChart pieCostChart1 = (PieChart) findViewById(R.id.cornInputsPieChart1);
+            PieChart pieCostChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
             pieCostChart.setDescription("");
 
             CropStats customCrop = cropStatsArrayList.get(1);
@@ -210,7 +238,7 @@ public class Model extends AppCompatActivity {
                     // need to get the chart in order to change it
                     // need to reorder the result data to mimmick the pie data
                     // need to set the string available when searching through the data
-                    PieChart pieChart1 = (PieChart) findViewById(R.id.cornInputsPieChart1);
+                    PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
                     ArrayList<CropStats.Result> result = customCrop.getOrderedPieValues(customCrop.getOrderedCostValues());
 
 
@@ -228,7 +256,7 @@ public class Model extends AppCompatActivity {
 
                     CropStats customCrop = cropStatsArrayList.get(1);
 
-                    PieChart pieChart1 = (PieChart) findViewById(R.id.cornInputsPieChart1);
+                    PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
                     NumberFormat nf = NumberFormat.getCurrencyInstance();
                     String total = nf.format(customCrop.getTotalCost());
                     pieChart1.setCenterText("Custom Cost: " + total);
@@ -245,11 +273,11 @@ public class Model extends AppCompatActivity {
 
 
         /**
-         * with this, transfer the regional avg to the customcorn activity, so that the
+         * with this, transfer the regional avg to the custom activity, so that the
          * values are set prior to allowing them to be edited
          */
-        Button inputsButton = (Button) findViewById(R.id.modelEditValues);
-        inputsButton.setOnClickListener(new View.OnClickListener() {
+        Button activityModelToCustom = (Button) findViewById(R.id.modelEditValues);
+        activityModelToCustom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -259,8 +287,8 @@ public class Model extends AppCompatActivity {
             }
         });
 
-
-        TextView linkCBOT = (TextView) findViewById(R.id.cornLinkCBOT);
+        // have a different link if soybean or corn chosen
+        TextView linkCBOT = (TextView) findViewById(R.id.modelLinkCBOT);
         if (REGIONAL_AVERAGE.getCrop() == 0) {
             linkCBOT.setText(R.string.linkCBOTCorn);
         } else {
@@ -271,27 +299,33 @@ public class Model extends AppCompatActivity {
 
 
         // if had already set a price for the bushel
-        final EditText pricePerBushel = (EditText) findViewById(R.id.cornPriceBushel);
-        if (cropStatsArrayList.get(1).getPrice() == 0) {
+        final EditText pricePerBushel = (EditText) findViewById(R.id.modelPriceBushel);
+        if (cropStatsArrayList.get(1).getPrice() == cropStatsArrayList.get(0).getPrice()) {
+
+            Log.d("price reg", cropStatsArrayList.get(0).getPrice() + "");
+            Log.d("price custom", cropStatsArrayList.get(1).getPrice() + "");
 
             pricePerBushel.setHint("Regional Average: " + REGIONAL_AVERAGE.getPrice());
 
         } else {
 
             pricePerBushel.setHint("" + cropStatsArrayList.get(1).getPrice());
-            HorizontalBarChart returnsChart = getReturnsGraph(cropStatsArrayList);
-            returnsChart.setOnChartValueSelectedListener(listener);
-            HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
-            profitChart.setOnChartValueSelectedListener(listener);
+
+
+            Log.d("price reg", cropStatsArrayList.get(0).getPrice() + "");
+            Log.d("price custom", cropStatsArrayList.get(1).getPrice() + "");
 
 
         }
 
-        //Button profitButton = (Button) findViewById(R.id.cornReturnsButton);
+        // create the listeners for the
+        HorizontalBarChart returnsChart = getReturnsGraph(cropStatsArrayList);
+        returnsChart.setOnChartValueSelectedListener(listener);
+        HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
+        profitChart.setOnChartValueSelectedListener(listener);
 
-        //EditText priceButton = (EditText) findViewById(R.id.cornPriceBushel);
 
-
+        // set a text watcher for the price per bushel
         pricePerBushel.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -318,6 +352,10 @@ public class Model extends AppCompatActivity {
                         returnsChart.setOnChartValueSelectedListener(listener);
                         HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
                         profitChart.setOnChartValueSelectedListener(listener);
+
+
+                        DatabaseStats dbStats = new DatabaseStats(getApplicationContext());
+                        dbStats.updateCrop(cropStatsArrayList.get(1), cropStatsArrayList.get(1).getTitle());
                     } catch (Exception e) {
                         e.printStackTrace();
                         pricePerBushel.setHint("Enter custom crop values");
@@ -331,8 +369,39 @@ public class Model extends AppCompatActivity {
         });
 
 
-        Button cornCommdityButton = (Button) findViewById(R.id.cornCommodityText);
-        cornCommdityButton.setOnClickListener(new View.OnClickListener() {
+
+
+        /**
+         * this section is dialogs for each of the headings
+         * inputs, commodity costs, returns, profits
+         */
+
+        // this popup will give people a little information about the inputs
+        Button inputsButton = (Button) findViewById(R.id.modelInputsButton);
+        inputsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(Model.this).create();
+                dialog.setTitle("Inputs");
+                dialog.setMessage("There are 3 different graphs. The pie graphs are the default view."
+                        + "\n\nThese pie graphs show what the proportion of costs compared to total cost for both the regional average and for your custom values"
+                        + "\n\nThe bar graphs are accessed by pressing the toggle button"
+                        + "\n\nThis graph shows the comparison between the regional average and your values for each of the input categories");
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+
+
+        // just a little popup if they click the heading for model commodity pricing
+        Button modelCommdityButton = (Button) findViewById(R.id.modelCommodityText);
+        modelCommdityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog alert = new AlertDialog.Builder(Model.this).create();
@@ -348,8 +417,55 @@ public class Model extends AppCompatActivity {
             }
         });
 
+        // a little popup that explains what the returns graph is
+        Button returnsButton = (Button) findViewById(R.id.modelReturnsButton);
+        returnsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(Model.this).create();
+                dialog.setTitle("Returns");
+                dialog.setMessage("This bar chart shows the values of your return simply"
+                        + " based on the price at which you sold you crop and your yield per acre");
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        // a little popup that explains what the profit graph is
+        Button profitButton = (Button) findViewById(R.id.modelProfitButton);
+        profitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(Model.this).create();
+                dialog.setTitle("Profit");
+                dialog.setMessage("This bar chart shows the values of your profit simply"
+                        + " based on the price at which the returns minus inputs per acre.");
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+
 
     }
+
+
+    /**
+     *
+     * this section of the code is the individual methods made.
+     *
+     */
+
 
     // this onchart listener works for both the returns and profits
     private OnChartValueSelectedListener listener = new OnChartValueSelectedListener() {
@@ -382,26 +498,7 @@ public class Model extends AppCompatActivity {
      *
      * @param v
      */
-    public void onToggleClicked(View v) {
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.cornToggleButton);
-        boolean on = toggle.isChecked();
 
-        PieChart pie = (PieChart) findViewById(R.id.cornInputsPieChart);
-        PieChart pie1 = (PieChart) findViewById(R.id.cornInputsPieChart1);
-        HorizontalBarChart bar = (HorizontalBarChart) findViewById(R.id.cornInputsBarChart);
-
-        if (on) {
-
-            pie.setVisibility(View.INVISIBLE);
-            pie1.setVisibility(View.INVISIBLE);
-            bar.setVisibility(View.VISIBLE);
-        } else if (!on) {
-            pie.setVisibility(View.VISIBLE);
-            pie1.setVisibility(View.VISIBLE);
-            bar.setVisibility(View.INVISIBLE);
-        }
-
-    }
 
     /**
      * this method gets the data for bar charts inputs
@@ -640,7 +737,7 @@ public class Model extends AppCompatActivity {
     // create the
     private HorizontalBarChart getReturnsGraph(ArrayList<CropStats> cropStatsArrayList) {
         // horizontal bar chart used for visualizing returns
-        HorizontalBarChart returnsChart = (HorizontalBarChart) findViewById(R.id.cornReturnsChart);
+        HorizontalBarChart returnsChart = (HorizontalBarChart) findViewById(R.id.modelReturnsChart);
 
         XAxis xAxis1 = returnsChart.getXAxis();
         xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);

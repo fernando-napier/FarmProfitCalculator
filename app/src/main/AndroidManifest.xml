@@ -23,18 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChangeVariables"
-            android:label="@string/title_activity_change_variables" >
-        </activity>
-        <activity
             android:name=".Model"
-            android:label="@string/title_activity_model"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_model">
         </activity>
         <activity
             android:name=".Custom"
-            android:label="@string/title_activity_custom"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_custom">
         </activity>
     </application>
 

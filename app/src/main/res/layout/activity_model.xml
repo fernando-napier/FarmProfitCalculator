@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/modelBackground"
@@ -7,12 +8,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.fernando.farmingfarming.Model"
-    tools:replace="android:label,Model">
+    tools:context=".Model"
+    android:theme="@style/AppTheme"
+    >
+    <!--tools:replace="android:label,Model"-->
 
 
     <ScrollView
-        android:id="@+id/cornScroll"
+        android:id="@+id/modelScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -55,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/modelInputAlert"
-                android:layout_below="@+id/cornInputsButton"
+                android:layout_below="@+id/modelInputsButton"
                 android:text="click this button to customize variables"
                 android:gravity="center"
                 android:textSize="8sp"
@@ -63,7 +66,7 @@
 
 
             <Button
-                android:id="@+id/cornInputsButton"
+                android:id="@+id/modelInputsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/modelEditValues"
@@ -74,49 +77,48 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <ToggleButton
-                android:id="@+id/cornToggleButton"
+                android:id="@+id/modelToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/welcomeSpace"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/modelEditValues"
                 android:gravity="center"
-                android:onClick="onToggleClicked"
                 android:textOff="Pie"
                 android:textOn="Bar" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/cornInputsBarChart"
+                android:id="@+id/modelInputsBarChart"
                 android:layout_width="match_parent"
                 android:layout_height="800sp"
-                android:layout_below="@id/cornInputsButton"
+                android:layout_below="@id/modelInputsButton"
                 android:visibility="invisible" />
 
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/cornInputsPieChart"
+                android:id="@+id/modelInputsPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="400sp"
-                android:layout_below="@id/cornInputsButton"
+                android:layout_below="@id/modelInputsButton"
                 android:visibility="visible" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/cornInputsPieChart1"
+                android:id="@+id/modelInputsPieChart1"
                 android:layout_width="match_parent"
                 android:layout_height="400sp"
-                android:layout_below="@id/cornInputsPieChart"
+                android:layout_below="@id/modelInputsPieChart"
                 android:visibility="visible" />
 
 
 
 
             <Button
-                android:id="@+id/cornCommodityText"
+                android:id="@+id/modelCommodityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/modelDummy"
-                android:layout_below="@+id/cornInputsPieChart1"
+                android:layout_below="@+id/modelInputsPieChart1"
                 android:gravity="center"
                 android:text="Commodity Price"
                 android:layout_marginTop="25sp"
@@ -124,11 +126,11 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/cornLinkCBOT"
+                android:id="@+id/modelLinkCBOT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/cornInputsPieChart1"
-                android:layout_alignBottom="@+id/cornCommodityText"
+                android:layout_below="@id/modelInputsPieChart1"
+                android:layout_alignBottom="@+id/modelCommodityText"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="25sp"
                 android:layout_marginBottom="5sp"
@@ -137,10 +139,10 @@
                 />
 
             <EditText
-                android:id="@+id/cornPriceBushel"
+                android:id="@+id/modelPriceBushel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cornCommodityText"
+                android:layout_below="@+id/modelCommodityText"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:gravity="center"
@@ -153,32 +155,32 @@
 
 
             <Button
-                android:id="@+id/cornReturnsButton"
+                android:id="@+id/modelReturnsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/modelDummy"
-                android:layout_below="@+id/cornPriceBushel"
+                android:layout_below="@+id/modelPriceBushel"
                 android:autoLink="web"
                 android:gravity="center"
                 android:text="Returns"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/cornReturnsChart"
+                android:id="@+id/modelReturnsChart"
                 android:layout_width="match_parent"
                 android:layout_height="300sp"
-                android:layout_below="@id/cornReturnsButton"
+                android:layout_below="@id/modelReturnsButton"
                 android:paddingBottom="50sp" />
 
 
             <Button
-                android:id="@+id/modelText"
+                android:id="@+id/modelProfitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/modelDummy"
-                android:layout_below="@+id/cornReturnsChart"
+                android:layout_below="@+id/modelReturnsChart"
                 android:gravity="center"
                 android:text="Profit"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -187,7 +189,7 @@
                 android:id="@+id/modelChart"
                 android:layout_width="match_parent"
                 android:layout_height="300sp"
-                android:layout_below="@id/modelText"
+                android:layout_below="@id/modelProfitButton"
                 android:paddingBottom="50sp" />
 
 

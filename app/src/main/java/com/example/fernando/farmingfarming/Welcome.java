@@ -98,6 +98,9 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
+        // set in front of the slider view
+        REGION_TEXT.bringToFront();
+
 
         /**
          * the next few onclicklisteners are for the images in the slider view

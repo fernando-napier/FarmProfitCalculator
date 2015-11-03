@@ -35,10 +35,10 @@ import java.util.TimerTask;
  */
 public class Custom extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_custom);
 
         setTitle("Customize Variables");
@@ -85,6 +85,7 @@ public class Custom extends AppCompatActivity {
         final TextView YIELD_DISPLAY = (TextView) findViewById(R.id.customYieldDisplayValues);
 
         final EditText SEED_SET = (EditText) findViewById(R.id.customSeedSetValue);
+
 
         final EditText FERTILIZER_SET = (EditText) findViewById(R.id.customFertilizerSetValue);
 
@@ -319,13 +320,12 @@ public class Custom extends AppCompatActivity {
                 if (COST_TOGGLE_BUTTON.isChecked()) {
 
                     String value = nf.format(valueTotal);
-
                     TOTAL_COST_VIEW.setText(value);
+
 
                 } else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
                     String value = nf.format(valueAcre);
-
                     TOTAL_COST_VIEW.setText(value);
 
                 }
@@ -339,36 +339,47 @@ public class Custom extends AppCompatActivity {
          *
          */
 
+        // numerical edit text for inputing repair costs
         SEED_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    SEED_SET.setText(getCurrencyString(value));
+                }
 
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+                // if there was a value added to the left of the
+                // dollar sign, then re-assemble the string with the dollar
+                // sign in at the 0 index
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -376,25 +387,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setSeed(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setSeed(value / CROP.getSizeAcresPlanted());
-                        SEED_SET.setText(getCurrencyString(CROP.getSeed() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setSeed(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -402,65 +396,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setSeed(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setSeed(value);
-                        SEED_SET.setText(getCurrencyString(CROP.getSeed()));
-
-                    }
+                    CROP.setSeed(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
 
+        // numerical edit text for inputing fertilizer costs
         FERTILIZER_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    FERTILIZER_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -468,25 +458,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFertilizer(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIntOnCap(value / CROP.getSizeAcresPlanted());
-                        FERTILIZER_SET.setText(getCurrencyString(CROP.getFertilizer() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setFertilizer(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -494,64 +467,62 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFertilizer(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFertilizer(value);
-                        FERTILIZER_SET.setText(getCurrencyString(CROP.getFertilizer()));
-
-                    }
+                    CROP.setFertilizer(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
 
+        // numerical edit text for inputing chemicals costs
         CHEMICALS_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    CHEMICALS_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -559,25 +530,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setChemicals(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setChemicals(value / CROP.getSizeAcresPlanted());
-                        CHEMICALS_SET.setText(getCurrencyString(CROP.getChemicals() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setChemicals(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -585,62 +539,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setChemicals(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setChemicals(value);
-                        CHEMICALS_SET.setText(getCurrencyString(CROP.getChemicals()));
-
-                    }
+                    CROP.setChemicals(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // numerical edit text for inputing custom operation costs
         CUSTOM_OPS_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    CUSTOM_OPS_SET.setText(getCurrencyString(value));
+                }
+
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
@@ -649,25 +602,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCustomOps(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCustomOps(value / CROP.getSizeAcresPlanted());
-                        CUSTOM_OPS_SET.setText(getCurrencyString(CROP.getCustomOps() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setCustomOps(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -675,65 +611,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCustomOps(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCustomOps(value);
-                        CUSTOM_OPS_SET.setText(getCurrencyString(CROP.getCustomOps()));
-
-                    }
+                    CROP.setCustomOps(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
 
+        // numerical edit text for inputing fuel, lube, and electricity costs
         FUEL_LUBE_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    FUEL_LUBE_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -741,25 +673,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFueLubeElec(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFueLubeElec(value / CROP.getSizeAcresPlanted());
-                        FUEL_LUBE_SET.setText(getCurrencyString(CROP.getFueLubeElec() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setFueLubeElec(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -767,64 +682,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFueLubeElec(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setFueLubeElec(value);
-                        FUEL_LUBE_SET.setText(getCurrencyString(CROP.getFueLubeElec()));
-
-                    }
+                    CROP.setFueLubeElec(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // numerical edit text for inputing repair costs
         REPAIRS_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    REPAIRS_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -832,25 +744,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setRepairs(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setRepairs(value / CROP.getSizeAcresPlanted());
-                        REPAIRS_SET.setText(getCurrencyString(CROP.getRepairs() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setRepairs(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -858,64 +753,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setRepairs(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setRepairs(value);
-                        REPAIRS_SET.setText(getCurrencyString(CROP.getRepairs()));
-
-                    }
+                    CROP.setRepairs(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // numerical edit text to input irrigation and water costs
         IRRIGATION_WATER_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    IRRIGATION_WATER_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -923,25 +815,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIrrigationWater(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIrrigationWater(value / CROP.getSizeAcresPlanted());
-                        IRRIGATION_WATER_SET.setText(getCurrencyString(CROP.getIrrigationWater() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setIrrigationWater(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -949,64 +824,61 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIrrigationWater(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIrrigationWater(value);
-                        IRRIGATION_WATER_SET.setText(getCurrencyString(CROP.getIrrigationWater()));
-
-                    }
+                    CROP.setIrrigationWater(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text to update interest on capital costs
         INT_ON_CAP_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
-                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    INT_ON_CAP_SET.setText(getCurrencyString(value));
+                }
 
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
+                    // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
 
@@ -1014,25 +886,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIntOnCap(value / CROP.getSizeAcresPlanted());
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIntOnCap(value / CROP.getSizeAcresPlanted());
-                        INT_ON_CAP_SET.setText(getCurrencyString(CROP.getIntOnCap() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setIntOnCap(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1040,62 +895,60 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIntOnCap(value);
-
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setIntOnCap(value);
-                        INT_ON_CAP_SET.setText(getCurrencyString(CROP.getIntOnCap()));
-
-                    }
+                    CROP.setIntOnCap(value);
 
                 }
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text to set the cost of hired labor
         HIRED_LABOR_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
+
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    HIRED_LABOR_SET.setText(getCurrencyString(value));
+                }
+
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
@@ -1104,24 +957,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setHiredLabor(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setHiredLabor(value / CROP.getSizeAcresPlanted());
-                        HIRED_LABOR_SET.setText(getCurrencyString(CROP.getHiredLabor() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setHiredLabor(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1129,87 +966,69 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setHiredLabor(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setHiredLabor(value);
-                        HIRED_LABOR_SET.setText(getCurrencyString(CROP.getHiredLabor()));
-
-                    }
+                    CROP.setHiredLabor(value);
 
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text that shows the cost of hired labor
         UNPAID_LABOR_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    UNPAID_LABOR_SET.setText(getCurrencyString(value));
+                }
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
-
 
                 // if the toggle button is pressed, then the values need to be presented as total cost
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostUnpaidLabor(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostUnpaidLabor(value / CROP.getSizeAcresPlanted());
-                        UNPAID_LABOR_SET.setText(getCurrencyString(CROP.getCostUnpaidLabor() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setCostUnpaidLabor(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1217,60 +1036,59 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostUnpaidLabor(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostUnpaidLabor(value);
-                        UNPAID_LABOR_SET.setText(getCurrencyString(CROP.getCostUnpaidLabor()));
-
-                    }
+                    CROP.setCostUnpaidLabor(value);
 
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text that shows the cost of recovery of the equipent
         RECOVERY_EQUIP_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    RECOVERY_EQUIP_SET.setText(getCurrencyString(value));
+                }
+
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
@@ -1279,24 +1097,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCapRecoveryOfEquip(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCapRecoveryOfEquip(value / CROP.getSizeAcresPlanted());
-                        RECOVERY_EQUIP_SET.setText(getCurrencyString(CROP.getCapRecoveryOfEquip() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setCapRecoveryOfEquip(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1304,59 +1106,58 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCapRecoveryOfEquip(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCapRecoveryOfEquip(value);
-                        RECOVERY_EQUIP_SET.setText(getCurrencyString(CROP.getCapRecoveryOfEquip()));
-
-                    }
+                    CROP.setCapRecoveryOfEquip(value);
 
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text for setting the cost of land and/or the rental rate
         LAND_RENTAL_RATE_SET.addTextChangedListener(new TextWatcher() {
-
-            CharSequence string;
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    LAND_RENTAL_RATE_SET.setText(getCurrencyString(value));
+                }
+
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
@@ -1365,24 +1166,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostOfLandRentalRate(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostOfLandRentalRate(value / CROP.getSizeAcresPlanted());
-                        LAND_RENTAL_RATE_SET.setText(getCurrencyString(CROP.getCostOfLandRentalRate() * CROP.getSizeAcresPlanted()));
-
-                    }
+                    // set the value based on what was received from the edittext
+                    CROP.setCostOfLandRentalRate(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1390,60 +1175,58 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostOfLandRentalRate(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setCostOfLandRentalRate(value);
-                        LAND_RENTAL_RATE_SET.setText(getCurrencyString(CROP.getCostOfLandRentalRate()));
-
-                    }
+                    CROP.setCostOfLandRentalRate(value);
 
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
                 // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
                 TOTAL_COST_VIEW.performClick();
 
             }
         });
 
+
+        // edit text for setting the cost of tax/insurance
         TAX_INSURANCE_SET.addTextChangedListener(new TextWatcher() {
-
-            CharSequence string;
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    TAX_INSURANCE_SET.setText(getCurrencyString(value));
+                }
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
 
                 }
@@ -1452,25 +1235,8 @@ public class Custom extends AppCompatActivity {
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setTaxesInsurance(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setTaxesInsurance(value / CROP.getSizeAcresPlanted());
-                        TAX_INSURANCE_SET.setText(getCurrencyString(CROP.getTaxesInsurance() * CROP.getSizeAcresPlanted()));
-
-                    }
-
+                    // set the value based on what was received from the edittext
+                    CROP.setTaxesInsurance(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1478,87 +1244,68 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setTaxesInsurance(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setTaxesInsurance(value);
-                        TAX_INSURANCE_SET.setText(getCurrencyString(CROP.getTaxesInsurance()));
-
-                    }
+                    CROP.setTaxesInsurance(value);
 
                 }
-                // update the total cost, whether per acre or total
-                TOTAL_COST_VIEW.performClick();
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
+                TOTAL_COST_VIEW.performClick();
 
             }
         });
 
-
+        // edit text for any costs not covered by the previous categories
         MISC_SET.addTextChangedListener(new TextWatcher() {
 
-            CharSequence string;
             float value;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                // this is a nested else if conditional
-                // the first level is just to differentiate between having
-                // no inputs and having the toggle button pressed or not
-                // the nested conditionals are to know the difference between having
-                // kept the entered $ value or it having been deleted
+                // make sure to get the float value of the entered values on the edit text,
+                // delete any tokens that are not necessary "," "$"
 
                 String text = s.subSequence(0, s.length()).toString();
 
-                // if there is no input or the input is only % then nothing happens
-                if ((s.length() == 0) || (text.equalsIgnoreCase("$"))) {
+                // this if statement is for a corner case in which the user enters an input
+                // to the left of the dollar sign, this solution just then takes that number and
+                // transfers it to the right of the dollar sign
+                if (text.charAt(1) == '$') {
+                    text = text.replace("$", "");
+                    text = text.replace(",", "");
+                    value = Float.valueOf(text);
+                    MISC_SET.setText(getCurrencyString(value));
+                }
+
+
+                text = text.replace("$", "");
+                text = text.replace(",", "");
+                value = Float.valueOf(text);
+
+
+                // if there is no input then do nothing
+                if ((s.length() == 0)) {
                     // DO NOTHING, JUST DONT LET ANYTHING ELSE HAPPEN
+
                 }
 
                 // if the toggle button is pressed, then the values need to be presented as total cost
                 // this means they need to be presented as (value * size of farm)
                 else if (COST_TOGGLE_BUTTON.isChecked()) {
 
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setMiscellaneous(value / CROP.getSizeAcresPlanted());
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setMiscellaneous(value / CROP.getSizeAcresPlanted());
-                        MISC_SET.setText(getCurrencyString(CROP.getMiscellaneous() * CROP.getSizeAcresPlanted()));
-
-                    }
-
+                    // set the value based on what was received from the edittext
+                    CROP.setMiscellaneous(value / CROP.getSizeAcresPlanted());
 
                 }
 
@@ -1566,29 +1313,18 @@ public class Custom extends AppCompatActivity {
                 // and will be as they were saved
                 else if (!(COST_TOGGLE_BUTTON.isChecked())) {
 
-
-                    // if the $ is present, then proceed to add the $ when adding values
-                    if (text.substring(0, 1).equalsIgnoreCase("$")) {
-                        // if delete $ token then make sure not to add
-                        string = s.subSequence(1, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setMiscellaneous(value);
-
-                    }
-
-                    // if no $ is present, then when the values are entered, set the text with the currency
-                    else {
-                        string = s.subSequence(0, s.length());
-                        value = Float.valueOf(string.toString());
-                        CROP.setMiscellaneous(value);
-                        MISC_SET.setText(getCurrencyString(CROP.getMiscellaneous()));
-
-                    }
+                    CROP.setMiscellaneous(value);
 
                 }
-                // update the total cost, whether per acre or total
-                TOTAL_COST_VIEW.performClick();
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                // update the total cost, whether per acre or total
+                // clicking the textview actually updates the value shown on the UI
+                TOTAL_COST_VIEW.performClick();
 
             }
         });
@@ -2019,7 +1755,7 @@ public class Custom extends AppCompatActivity {
                     RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStats.getCapRecoveryOfEquip()));
                     LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStats.getCostOfLandRentalRate()));
                     TAX_INSURANCE_SET.setText(getCurrencyString(cropStats.getTaxesInsurance()));
-                    TOTAL_COST_VIEW.setText(getCurrencyString( cropStats.getTotalCost()));
+                    TOTAL_COST_VIEW.setText(getCurrencyString(cropStats.getTotalCost()));
 
 
                 } else {
