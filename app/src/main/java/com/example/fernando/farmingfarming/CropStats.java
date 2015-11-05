@@ -1299,6 +1299,7 @@ public class CropStats implements Parcelable {
         capRecoveryOfEquip = in.readFloat();
         costOfLandRentalRate = in.readFloat();
         taxesInsurance = in.readFloat();
+        miscellaneous = in.readFloat();
         generalFarmOverhead = in.readFloat();
         totalOverheadCost = in.readFloat();
         totalCost = in.readFloat();
@@ -1338,6 +1339,7 @@ public class CropStats implements Parcelable {
         dest.writeFloat(capRecoveryOfEquip);
         dest.writeFloat(costOfLandRentalRate);
         dest.writeFloat(taxesInsurance);
+        dest.writeFloat(miscellaneous);
         dest.writeFloat(generalFarmOverhead);
         dest.writeFloat(totalOverheadCost);
         dest.writeFloat(totalCost);

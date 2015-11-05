@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/DarkGreen"
+    android:background="@color/Black"
     android:padding="15sp"
     android:alpha="0.9">
 
@@ -54,7 +54,7 @@
         android:textColor="@color/Ivory"
         android:layout_marginBottom="10sp"/>
 
-    <TextView
+ <!--   <TextView
         android:id="@+id/welcomeMenuParagraph5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,12 +62,12 @@
         android:text="@string/welcome_menu_paragraph5"
         android:textColor="@color/Ivory"
         android:layout_marginBottom="10sp"/>
-
+-->
     <TextView
         android:id="@+id/welcomeMenuParagraph6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/welcomeMenuParagraph5"
+        android:layout_below="@+id/welcomeMenuParagraph4"
         android:text="@string/welcome_menu_paragraph6"
         android:textColor="@color/Ivory"
         android:layout_marginBottom="10sp"/>

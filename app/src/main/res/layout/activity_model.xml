@@ -96,21 +96,40 @@
 
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/modelInputsPieChart"
+                android:id="@+id/modelRegionPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="400sp"
                 android:layout_below="@id/modelInputsButton"
                 android:visibility="visible" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/modelInputsPieChart1"
+                android:id="@+id/modelCustomPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="400sp"
-                android:layout_below="@id/modelInputsPieChart"
+                android:layout_below="@id/modelRegionPieChart"
+                android:layout_marginBottom="10sp"
                 android:visibility="visible" />
 
 
+            <TextView
+                android:id="@+id/modelInputsAnalysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modelCustomPieChart"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                />
 
+            <View
+                android:id="@+id/modelInputSeparator"
+                android:layout_below="@+id/modelInputsAnalysis"
+                android:layout_width="wrap_content"
+                android:layout_height="3dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="20sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginLeft="15sp"
+                android:layout_marginRight="15sp" />
 
             <Button
                 android:id="@+id/modelCommodityText"
@@ -118,10 +137,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/modelDummy"
-                android:layout_below="@+id/modelInputsPieChart1"
+                android:layout_below="@+id/modelInputSeparator"
                 android:gravity="center"
                 android:text="Commodity Price"
-                android:layout_marginTop="25sp"
                 android:layout_marginBottom="5sp"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -129,11 +147,10 @@
                 android:id="@+id/modelLinkCBOT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/modelInputsPieChart1"
+                android:layout_below="@id/modelInputSeparator"
                 android:layout_alignBottom="@+id/modelCommodityText"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="25sp"
-                android:layout_marginBottom="5sp"
+                android:layout_marginTop="20sp"
                 android:layout_alignLeft="@+id/modelDummy"
                 android:gravity="center"
                 />
@@ -150,8 +167,17 @@
                 android:imeOptions="actionDone"
                 android:maxLength="10"
                 android:layout_marginTop="10sp"
-                android:layout_marginBottom="10sp"
+
                 />
+
+            <TextView
+                android:id="@+id/modelCommodityHint"
+                android:layout_below="@+id/modelPriceBushel"
+                android:layout_marginBottom="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="make sure to set a price per bushel for your crop"
+                android:textColor="@color/Red"/>
 
 
             <Button
@@ -160,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/modelDummy"
-                android:layout_below="@+id/modelPriceBushel"
+                android:layout_below="@+id/modelCommodityHint"
                 android:autoLink="web"
                 android:gravity="center"
                 android:text="Returns"
@@ -169,7 +195,7 @@
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/modelReturnsChart"
                 android:layout_width="match_parent"
-                android:layout_height="300sp"
+                android:layout_height="150sp"
                 android:layout_below="@id/modelReturnsButton"
                 android:paddingBottom="50sp" />
 
@@ -186,11 +212,19 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/modelChart"
+                android:id="@+id/modelProfitChart"
                 android:layout_width="match_parent"
-                android:layout_height="300sp"
+                android:layout_height="150sp"
                 android:layout_below="@id/modelProfitButton"
-                android:paddingBottom="50sp" />
+                />
+
+            <TextView
+                android:id="@+id/modelProfitAnalysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modelProfitChart"
+                android:layout_marginTop="15sp"
+                />
 
 
 

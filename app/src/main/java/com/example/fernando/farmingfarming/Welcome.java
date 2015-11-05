@@ -63,11 +63,11 @@ public class Welcome extends AppCompatActivity {
         TextSliderView soybeanSlider = new TextSliderView(this);
 
         // add an image of corn to the scrolling view
-        cornSlider.description("Corn").image(R.drawable.corn);
+        cornSlider.description("Corn").image(R.drawable.cornfield);
         slider.addSlider(cornSlider);
 
         // add an image of soybeans to the scrolling view
-        soybeanSlider.description("Soybean").image(R.drawable.soybean);
+        soybeanSlider.description("Soybean").image(R.drawable.soybeanfield);
         slider.addSlider(soybeanSlider);
 
 

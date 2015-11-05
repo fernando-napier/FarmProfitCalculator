@@ -191,7 +191,7 @@
                 android:text="* the checkbox is used to signify which of the inputs you would like to visualize on the graphs " />
 
             <Button
-                android:id="@+id/customArrayCrop"
+                android:id="@+id/customToModel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/customCheckBoxClarification"
@@ -207,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/customArrayCrop"
+                android:layout_below="@+id/customToModel"
                 android:gravity="center"
                 android:onClick="onToggleClicked"
                 android:textOn="Total Cost"
@@ -221,9 +221,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/DarkGreen"
-                android:layout_below="@+id/customArrayCrop"
+                android:layout_below="@+id/customToModel"
                 android:layout_alignParentLeft="true"
                 />
+
+            <TextView
+                android:id="@+id/customReformatValues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/customToggleButton"
+                android:text="Re-format values"/>
 
 
             <TextView

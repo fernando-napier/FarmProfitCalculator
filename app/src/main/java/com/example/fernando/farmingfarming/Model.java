@@ -57,6 +57,7 @@ public class Model extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model);
 
+
         // check for the togle button, and alternate between graphs being visible/ invisible
         final ToggleButton toggle = (ToggleButton) findViewById(R.id.modelToggleButton);
         toggle.setOnClickListener(new View.OnClickListener() {
@@ -65,18 +66,18 @@ public class Model extends AppCompatActivity {
 
                 boolean on = toggle.isChecked();
 
-                PieChart pie = (PieChart) findViewById(R.id.modelInputsPieChart);
-                PieChart pie1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
+                PieChart region = (PieChart) findViewById(R.id.modelRegionPieChart);
+                PieChart custom = (PieChart) findViewById(R.id.modelCustomPieChart);
                 HorizontalBarChart bar = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
 
                 if (on) {
 
-                    pie.setVisibility(View.INVISIBLE);
-                    pie1.setVisibility(View.INVISIBLE);
+                    region.setVisibility(View.INVISIBLE);
+                    custom.setVisibility(View.INVISIBLE);
                     bar.setVisibility(View.VISIBLE);
                 } else if (!on) {
-                    pie.setVisibility(View.VISIBLE);
-                    pie1.setVisibility(View.VISIBLE);
+                    region.setVisibility(View.VISIBLE);
+                    custom.setVisibility(View.VISIBLE);
                     bar.setVisibility(View.INVISIBLE);
                 }
 
@@ -84,12 +85,27 @@ public class Model extends AppCompatActivity {
         });
 
 
-
         Bundle bundle = getIntent().getExtras();
 
         // get parcelable list of cropstats from the sqlite database
         final ArrayList<CropStats> cropStatsArrayList = bundle.getParcelableArrayList("crops");
         final CropStats REGIONAL_AVERAGE = cropStatsArrayList.get(0);
+
+        /**
+         * with this, transfer the regional avg to the custom activity, so that the
+         * values are set prior to allowing them to be edited
+         */
+        Button activityModelToCustom = (Button) findViewById(R.id.modelEditValues);
+        activityModelToCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(Model.this, Custom.class);
+                i.putParcelableArrayListExtra("crops", cropStatsArrayList);
+                startActivity(i);
+            }
+        });
+
 
         // get the data for the region as added in the previous activity (welcome class)
         RegionData regionData = new RegionData(REGIONAL_AVERAGE.getRegion());
@@ -154,138 +170,19 @@ public class Model extends AppCompatActivity {
         inputBarChart.setOnChartValueSelectedListener(listener);
         inputBarChart.invalidate();
 
+        // the render method creates the and generates the chart
+        renderPieValues(cropStatsArrayList);
 
-        //TODO:Make a second invisible piechart in the same location as the original piechart
-        //TODO:that allows the user to toggle from the default to custom views
-        PieChart pieCostChart = (PieChart) findViewById(R.id.modelInputsPieChart);
-        pieCostChart.setDescription("");
+        // set the text for the inputs analysis
+        inputsAnalysis(cropStatsArrayList);
 
-        // pie data used for the pie chart that overlays the horizontal bar chart
-        PieData pieData = getPieData(REGIONAL_AVERAGE);
-        pieCostChart.setData(pieData);
-
-        // set the legend for the piechart
-        Legend lPieCostChart = pieCostChart.getLegend();
-        lPieCostChart.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        lPieCostChart.setWordWrapEnabled(true);
-        lPieCostChart.setFormSize(8f);
-        lPieCostChart.setXEntrySpace(0f);
-
-        pieCostChart.setCenterText("Regional Values");
-
-        pieCostChart.invalidate();
-
-        pieCostChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-                // need to get the chart in order to change it
-                // need to reorder the result data to mimmick the pie data
-                // need to set the string available when searching through the data
-                PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart);
-                ArrayList<CropStats.Result> result = REGIONAL_AVERAGE.getOrderedPieValues(REGIONAL_AVERAGE.getOrderedCostValues());
-
-
-                // format number for currency
-                NumberFormat nf = NumberFormat.getCurrencyInstance();
-                String floats = nf.format(e.getVal());
-                String total = nf.format(REGIONAL_AVERAGE.getTotalCost());
-                pieChart1.setCenterText("Regional Cost: " + total + "\n" + REGIONAL_AVERAGE.getIndexString(result.get(e.getXIndex()).getIndex()) + "\n" + floats);
-
-
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-
-                PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart);
-                NumberFormat nf = NumberFormat.getCurrencyInstance();
-                String total = nf.format(REGIONAL_AVERAGE.getTotalCost());
-                pieChart1.setCenterText("Regional Cost: " + total);
-
-
-            }
-        });
-
-        if (cropStatsArrayList.size() > 1) {
-            PieChart pieCostChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
-            pieCostChart.setDescription("");
-
-            CropStats customCrop = cropStatsArrayList.get(1);
-            // pie data used for the pie chart that overlays the horizontal bar chart
-            PieData pieData1 = getPieData(customCrop);
-            pieCostChart1.setData(pieData1);
-
-            // set the legend for the piechart
-            Legend lPieChart = pieCostChart.getLegend();
-            lPieChart.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            lPieChart.setWordWrapEnabled(true);
-            lPieChart.setFormSize(8f);
-            lPieChart.setXEntrySpace(0f);
-
-            pieCostChart1.setCenterText("Values from: " + cropStatsArrayList.get(1).getTitle());
-
-            pieCostChart1.invalidate();
-
-            pieCostChart1.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                @Override
-                public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-
-                    CropStats customCrop = cropStatsArrayList.get(1);
-
-                    // need to get the chart in order to change it
-                    // need to reorder the result data to mimmick the pie data
-                    // need to set the string available when searching through the data
-                    PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
-                    ArrayList<CropStats.Result> result = customCrop.getOrderedPieValues(customCrop.getOrderedCostValues());
-
-
-                    // format number for currency
-                    NumberFormat nf = NumberFormat.getCurrencyInstance();
-                    String floats = nf.format(e.getVal());
-                    String total = nf.format(customCrop.getTotalCost());
-                    pieChart1.setCenterText("Custom Cost: " + total + "\n" + customCrop.getIndexString(result.get(e.getXIndex()).getIndex()) + "\n" + floats);
-
-
-                }
-
-                @Override
-                public void onNothingSelected() {
-
-                    CropStats customCrop = cropStatsArrayList.get(1);
-
-                    PieChart pieChart1 = (PieChart) findViewById(R.id.modelInputsPieChart1);
-                    NumberFormat nf = NumberFormat.getCurrencyInstance();
-                    String total = nf.format(customCrop.getTotalCost());
-                    pieChart1.setCenterText("Custom Cost: " + total);
-
-
-                }
-            });
-        }
+        profitAnalysis(cropStatsArrayList);
 
 
         /**
          * set the buttons at the bottom of the activity to do something when clicked
          */
 
-
-        /**
-         * with this, transfer the regional avg to the custom activity, so that the
-         * values are set prior to allowing them to be edited
-         */
-        Button activityModelToCustom = (Button) findViewById(R.id.modelEditValues);
-        activityModelToCustom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent i = new Intent(Model.this, Custom.class);
-                i.putParcelableArrayListExtra("crops", cropStatsArrayList);
-                startActivity(i);
-            }
-        });
 
         // have a different link if soybean or corn chosen
         TextView linkCBOT = (TextView) findViewById(R.id.modelLinkCBOT);
@@ -318,7 +215,7 @@ public class Model extends AppCompatActivity {
 
         }
 
-        // create the listeners for the
+        // create the listeners for the graphs
         HorizontalBarChart returnsChart = getReturnsGraph(cropStatsArrayList);
         returnsChart.setOnChartValueSelectedListener(listener);
         HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
@@ -335,15 +232,11 @@ public class Model extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                String string = s.toString();
 
                 // if the edittext has a value, make sure that if it's "$" that it doesn't crash the system
                 // if string empty after changes, then set the hint
-
-                String string = s.toString();
                 if (!string.equalsIgnoreCase("")) {
                     float value = Float.valueOf(string);
                     try {
@@ -353,22 +246,30 @@ public class Model extends AppCompatActivity {
                         HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
                         profitChart.setOnChartValueSelectedListener(listener);
 
-
                         DatabaseStats dbStats = new DatabaseStats(getApplicationContext());
                         dbStats.updateCrop(cropStatsArrayList.get(1), cropStatsArrayList.get(1).getTitle());
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         pricePerBushel.setHint("Enter custom crop values");
 
+
                     }
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+                profitAnalysis(cropStatsArrayList);
 
 
             }
 
         });
-
-
 
 
         /**
@@ -396,7 +297,6 @@ public class Model extends AppCompatActivity {
                 dialog.show();
             }
         });
-
 
 
         // just a little popup if they click the heading for model commodity pricing
@@ -456,14 +356,336 @@ public class Model extends AppCompatActivity {
         });
 
 
+    }
+
+    // add some text that explains returns
+    private void profitAnalysis(ArrayList<CropStats> cropStats) {
+
+        TextView proftText = (TextView) findViewById(R.id.modelProfitAnalysis);
+
+        CropStats region = cropStats.get(0);
+        CropStats custom = cropStats.get(1);
+
+        String string = "Profit Analysis:\n\n";
+
+        // first find out if they are making a profit
+        if (custom.getProfitFloat() > 0) {
+
+            string = string + "Congratulations on turning a profit!\n\n";
+
+            // if they are, check if their region is also profitable
+            if (region.getProfitFloat() > 0) {
+
+                string = string + "It looks as though you are making ";
+
+                // check if they are profiting better than their region
+                if (region.getProfitFloat() > custom.getProfitFloat()) {
+
+                    string = string + (region.getProfitFloat() - custom.getProfitFloat()) + " less than your region's average."
+                            + "Your bottom line looks good";
+
+
+                } else if (region.getProfitFloat() < custom.getProfitFloat()) {
+
+                    string = string + (custom.getProfitFloat() - region.getProfitFloat()) + " more than your region's average. You turned a profit"
+                            + "and beat the region average, it takes a great business mind to do so. Your bottom line looks very good!";
+
+
+                }
+
+            } else if (region.getProfitFloat() < 0) {
+
+                string = string + "Not only did you earn a profit, but you did it in a region that is losing money per acre at " + region.getProfitFloat()
+                        + " per acre. It takes a great business mind to do so. Again, Congratulations!!!";
+
+            } else {
+
+                string = string + " about the same as your region.";
+
+
+            }
+
+        } else if (custom.getProfitFloat() < 0) {
+
+            string = string + "Unfortunately your farm is losing money.\n\n";
+
+            // if they are, check if their region is also profitable
+            if (region.getProfitFloat() > 0) {
+
+
+                string = string + "It looks as though your region is a profitable region. Maybe you should look at making a few input changes. " +
+                        "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. " +
+                        "Hopefully this will help your bottom line.";
+
+
+            } else if (region.getProfitFloat() < 0) {
+
+                string = string + "It looks as though you are making ";
+
+                // check if they are profiting better than their region
+                if (region.getProfitFloat() > custom.getProfitFloat()) {
+
+                    string = string + (region.getProfitFloat() - custom.getProfitFloat()) + " less than your region's average."
+                            + "Maybe you should look at making a few input changes." +
+                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+
+
+                } else if (region.getProfitFloat() < custom.getProfitFloat()) {
+
+                    string = string + (custom.getProfitFloat() - region.getProfitFloat()) + " more than your region's average." +
+                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+
+
+                }
+
+
+            } else {
+
+                string = string + " about the same as your region." +
+                        "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+
+
+            }
+
+        } else {
+
+            string = string + "It looks as though you haven't set any custom values. If you did set some values, either you are right on the average values for your region "+
+                    "or there is some errors within this program. Let the developer of this application know by submitting a review on the app store reviews. Thanks!";
+
+
+        }
+
+        proftText.setText(string);
+
+    }
+
+
+    // add a snippet of an analysis regarding the inputs
+    private void inputsAnalysis(ArrayList<CropStats> cropStats) {
+
+        // access the textview
+        TextView view = (TextView) findViewById(R.id.modelInputsAnalysis);
+
+        //create the regional and custom values
+        CropStats region = cropStats.get(0);
+        CropStats custom = cropStats.get(1);
+
+        Log.d("region cost", "" + region.getTotalCost());
+        Log.d("custom cost", "" + custom.getTotalCost());
+        Log.d("custom overhead", "" + custom.getTotalOverheadCost());
+        Log.d("custom operational", "" + custom.getTotalOperationalCosts());
+        Log.d("custom misc", "" + custom.getMiscellaneous());
+
+        String string = "Cost Analysis: \n\n";
+
+
+        // if region costs are greater than the custom costs
+        if (region.getTotalCost() > custom.getTotalCost()) {
+
+
+            string = string + "The regional cost per acre is actually higher than what you spent overall. \n\n";
+            string = string + "Your cost: $" + custom.getTotalCost() + ", regional cost: $" + region.getTotalCost();
+
+            view.setText(string);
+
+        }
+
+        // if custom costs are greate than the regional costs
+        else if (region.getTotalCost() < custom.getTotalCost()) {
+
+            string = string + "Unfortunately it seems you are spending more per acre than your region. \n\n";
+            string = string + "Your cost: $" + custom.getTotalCost() + ", regional cost: $" + region.getTotalCost();
+
+            view.setText(string);
+
+        } else {
+
+            string = "You are spending the same as your region we think! Or you have not set your own values. Go and set your own values!";
+            view.setText(string);
+
+        }
+
+
+    }
+
+    /**
+     * this method takes the 2 cropstats are rendered into their pie values
+     * this creates two different pie charts, one for the regional averages
+     * and one for the custom values
+     *
+     * @param cropStats
+     */
+
+    private void renderPieValues(ArrayList<CropStats> cropStats) {
+
+
+        /**
+         * make sure the indexes of none of the entries are the same,
+         * even if they are comparisons, because it will not show on
+         *
+         * also make sure that the slices that are zero, not be included
+         */
+
+        final CropStats region = cropStats.get(0);
+
+
+        ArrayList<CropStats.Result> regionResult = region.getOrderedCostValues();
+        ArrayList<CropStats.Result> pieRegionResult = region.getOrderedPieValues(regionResult);
+        ArrayList<Float> regionFloatValues = region.getFloatValues(pieRegionResult);
+        ArrayList<Integer> regionIndexValues = region.getIndices(pieRegionResult);
+        ArrayList<Entry> regionEntries = new ArrayList<>();
+        ArrayList<String> regionStringPie = getChartStrings(regionIndexValues);
+
+
+        for (int a = 0; a < regionFloatValues.size(); a++) {
+            regionEntries.add(new Entry(regionFloatValues.get(a), a));
+        }
+
+
+        PieDataSet regionPieDataSet = new PieDataSet(regionEntries, "");
+        regionPieDataSet.setColors(getPieColors());
+        regionPieDataSet.setValueFormatter(new MyValueFormatter());
+        regionPieDataSet.setValueTextSize(8f);
+        regionPieDataSet.setSliceSpace(5f);
+        regionPieDataSet.setHighlightEnabled(true);
+
+
+        PieData regionPieData = new PieData(regionStringPie, regionPieDataSet);
+
+        PieChart pieRegionChart = (PieChart) findViewById(R.id.modelRegionPieChart);
+
+        pieRegionChart.setData(regionPieData);
+
+        Legend regionLegend = pieRegionChart.getLegend();
+        regionLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        regionLegend.setWordWrapEnabled(true);
+        regionLegend.setFormSize(8f);
+        regionLegend.setXEntrySpace(0f);
+
+        pieRegionChart.setCenterText("Regional Values");
+
+        pieRegionChart.invalidate();
+
+        pieRegionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+
+                // need to get the chart in order to change it
+                // need to reorder the result data to mimmick the pie data
+                // need to set the string available when searching through the data
+                PieChart pieChart = (PieChart) findViewById(R.id.modelRegionPieChart);
+                ArrayList<CropStats.Result> result = region.getOrderedPieValues(region.getOrderedCostValues());
+
+
+                // format number for currency
+                NumberFormat nf = NumberFormat.getCurrencyInstance();
+                String floats = nf.format(e.getVal());
+                String total = nf.format(region.getTotalCost());
+                pieChart.setCenterText("Regional Average: " + total + "\n" + region.getIndexString(result.get(e.getXIndex()).getIndex()) + "\n" + floats);
+
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+
+                PieChart pieChart1 = (PieChart) findViewById(R.id.modelRegionPieChart);
+                NumberFormat nf = NumberFormat.getCurrencyInstance();
+                String total = nf.format(region.getTotalCost());
+                pieChart1.setCenterText("Regional Average: " + total);
+
+
+            }
+        });
+
+
+        /**
+         * create the chart for the custom pie chart
+         * //TODO: make sure that the pie legent values are wrapped
+         */
+
+        final CropStats custom = cropStats.get(1);
+
+        ArrayList<CropStats.Result> customResult = custom.getOrderedCostValues();
+        ArrayList<CropStats.Result> pieCustomResult = custom.getOrderedPieValues(customResult);
+        ArrayList<Float> customFloatValues = region.getFloatValues(pieCustomResult);
+        ArrayList<Integer> customIndexValues = region.getIndices(pieCustomResult);
+        ArrayList<Entry> customEntries = new ArrayList<>();
+        ArrayList<String> customStringPie = getChartStrings(customIndexValues);
+
+        for (int a = 0; a < customFloatValues.size(); a++) {
+            customEntries.add(new Entry(customFloatValues.get(a), a));
+        }
+
+
+        PieDataSet customPieDataSet = new PieDataSet(regionEntries, "");
+        customPieDataSet.setColors(getPieColors());
+        customPieDataSet.setValueFormatter(new MyValueFormatter());
+        customPieDataSet.setValueTextSize(8f);
+        customPieDataSet.setSliceSpace(5f);
+        customPieDataSet.setHighlightEnabled(true);
+
+
+        PieData customPieData = new PieData(customStringPie, regionPieDataSet);
+
+        PieChart pieCustomChart = (PieChart) findViewById(R.id.modelCustomPieChart);
+
+        pieCustomChart.setData(customPieData);
+
+        Legend customLegend = pieCustomChart.getLegend();
+        customLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        customLegend.setWordWrapEnabled(true);
+        customLegend.setFormSize(8f);
+        customLegend.setXEntrySpace(0f);
+
+        pieCustomChart.setCenterText("Values from: " + custom.getTitle());
+
+        pieCustomChart.invalidate();
+
+        pieCustomChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+
+                // need to get the chart in order to change it
+                // need to reorder the result data to mimmick the pie data
+                // need to set the string available when searching through the data
+                PieChart pieChart = (PieChart) findViewById(R.id.modelCustomPieChart);
+                ArrayList<CropStats.Result> result = custom.getOrderedPieValues(custom.getOrderedCostValues());
+
+
+                // format number for currency
+                NumberFormat nf = NumberFormat.getCurrencyInstance();
+                String floats = nf.format(e.getVal());
+                String total = nf.format(custom.getTotalCost());
+                pieChart.setCenterText("Custom Cost: " + total + "\n" + custom.getIndexString(result.get(e.getXIndex()).getIndex()) + "\n" + floats);
+
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+
+                PieChart pieChart1 = (PieChart) findViewById(R.id.modelCustomPieChart);
+                NumberFormat nf = NumberFormat.getCurrencyInstance();
+                String total = nf.format(custom.getTotalCost());
+                pieChart1.setCenterText("Custom Cost: " + total);
+
+
+            }
+        });
+
 
     }
 
 
     /**
-     *
      * this section of the code is the individual methods made.
-     *
      */
 
 
@@ -492,53 +714,6 @@ public class Model extends AppCompatActivity {
 
     }
 
-
-    /**
-     * if toggled, display one or the other graphs (pie vs bar)
-     *
-     * @param v
-     */
-
-
-    /**
-     * this method gets the data for bar charts inputs
-     *
-     * @param crop
-     * @return
-     */
-
-    private BarData getBarChartData(CropStats crop) {
-
-        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
-
-
-        // ordered result, will get the order of the values from highest
-        // to lowest.
-        ArrayList<CropStats.Result> result = crop.getOrderedCostValues();
-
-        // take the crop values and put them
-        for (int i = 0; i < result.size(); i++) {
-            entries.add(new BarEntry(result.get(i).getValue(), i));
-
-        }
-
-        //TODO: could make these two methods one (getIndices and geChartStrings)
-        ArrayList<Integer> indices = crop.getIndices(result);
-        ArrayList<String> xValues = getChartStrings(indices);
-
-        BarDataSet barDataSet = new BarDataSet(entries, "Regional Average");
-        barDataSet.setColor(Color.BLUE);
-        barDataSet.setValueFormatter(new MyValueFormatter());
-        barDataSet.setValueTextSize(8f);
-
-
-        BarData barData = new BarData(xValues, barDataSet);
-
-
-        return barData;
-
-    }
-
     /**
      * create another getBarChartData() method to include another
      * data
@@ -559,7 +734,6 @@ public class Model extends AppCompatActivity {
         // set the barEntries based on the high to low concept
         for (int i = 0; i < defaultResult.size(); i++) {
             defaultEntries.add(new BarEntry(defaultResult.get(i).getValue(), i));
-            Log.d("default", defaultResult.get(i).getIndex() + "");
         }
 
         // set these values to mimic the previous setting
@@ -567,7 +741,6 @@ public class Model extends AppCompatActivity {
         for (int i = 0; i < customResult.size(); i++) {
             int index = defaultResult.get(i).getIndex();
             customEntries.add(new BarEntry(customResult.get(index).getValue(), i));
-            Log.d("custom", customResult.get(i).getIndex() + "");
 
         }
 
@@ -599,50 +772,6 @@ public class Model extends AppCompatActivity {
 
     }
 
-
-    private PieData getPieData(CropStats crop) {
-
-
-        /**
-         * make sure the indexes of none of the entries are the same,
-         * even if they are comparisons, because it will not show on
-         *
-         * also make sure that the slices that are zero, not be included
-         */
-
-
-        ArrayList<CropStats.Result> result = crop.getOrderedCostValues();
-        ArrayList<CropStats.Result> pieResult = crop.getOrderedPieValues(result);
-        ArrayList<Float> floatValues = crop.getFloatValues(pieResult);
-        ArrayList<Integer> indexValues = crop.getIndices(pieResult);
-        ArrayList<Entry> entries1 = new ArrayList<>();
-        ArrayList<String> stringPie = getChartStrings(indexValues);
-
-
-        for (int a = 0; a < floatValues.size(); a++) {
-            entries1.add(new Entry(floatValues.get(a), a));
-
-        }
-
-
-        //TODO: index size 13, stringPie size 12
-        //// TODO: figure out the issues
-
-
-        PieDataSet pieDataSet = new PieDataSet(entries1, "");
-        pieDataSet.setColors(getPieColors());
-        pieDataSet.setValueFormatter(new MyValueFormatter());
-        pieDataSet.setValueTextSize(8f);
-        pieDataSet.setSliceSpace(5f);
-        pieDataSet.setHighlightEnabled(true);
-
-
-        PieData pieData = new PieData(stringPie, pieDataSet);
-
-
-        return pieData;
-
-    }
 
     private ArrayList<String> getChartStrings(ArrayList<Integer> entryArray) {
 
@@ -773,7 +902,7 @@ public class Model extends AppCompatActivity {
         Log.d("custom return", cropStatsArrayList.get(1).getTotalReturns() + "");
         if (cropStatsArrayList.size() >= 1) {
             defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getTotalReturns(), 0));
-            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg");
+            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
             defaultDataSet.setValueFormatter(new MyValueFormatter());
             defaultDataSet.setColor(Color.BLUE);
             returnsDataSet.add(defaultDataSet);
@@ -806,7 +935,7 @@ public class Model extends AppCompatActivity {
 
     private HorizontalBarChart getProfitGraph(ArrayList<CropStats> cropStatsArrayList) {
         // horizontal bar chart used for visualizing returns
-        HorizontalBarChart profitChart = (HorizontalBarChart) findViewById(R.id.modelChart);
+        HorizontalBarChart profitChart = (HorizontalBarChart) findViewById(R.id.modelProfitChart);
 
         XAxis xAxis1 = profitChart.getXAxis();
         xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -838,11 +967,10 @@ public class Model extends AppCompatActivity {
         ArrayList<BarDataSet> returnsDataSet = new ArrayList<>();
         returnStrings.add("Grain");
 
-        Log.d("region return", cropStatsArrayList.get(0).getTotalReturns() + "");
-        Log.d("custom return", cropStatsArrayList.get(1).getTotalReturns() + "");
+
         if (cropStatsArrayList.size() >= 1) {
             defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getProfitFloat(), 0));
-            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg");
+            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
             defaultDataSet.setValueFormatter(new MyValueFormatter());
             defaultDataSet.setColor(Color.BLUE);
             returnsDataSet.add(defaultDataSet);
@@ -850,9 +978,7 @@ public class Model extends AppCompatActivity {
 
         }
         if (cropStatsArrayList.size() >= 2) {
-            Log.d("custom returns", cropStatsArrayList.get(1).getTotalReturns() + "");
-            Log.d("custom cost", cropStatsArrayList.get(1).getTotalCost() + "");
-            Log.d("custom profit", cropStatsArrayList.get(1).getProfitFloat() + "");
+
             customReturnEntry.add(new BarEntry(cropStatsArrayList.get(1).getProfitFloat(), 0));
             BarDataSet customDataSet = new BarDataSet(customReturnEntry, "Custom");
             customDataSet.setValueFormatter(new MyValueFormatter());

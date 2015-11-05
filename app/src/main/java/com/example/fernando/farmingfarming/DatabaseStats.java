@@ -48,6 +48,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
     private static final String KEY_CAP_RECOVERY_OF_EQUIPMENT = "cap_recovery_of_equip";
     private static final String KEY_COST_LAND_AND_RENTAL_RATES = "land_rental_rates";
     private static final String KEY_TAXES_AND_INSURANCE = "taxes_insurance";
+    private static final String KEY_MISCELLANEOUS = "miscellaneous";
     private static final String KEY_GENERAL_FARM_OVERHEAD = "general_farm_overhead";
     private static final String KEY_TOTAL_OVERHEAD_COST = "total_overhead_costs";
     private static final String KEY_TOTAL_COST = "total_costs";
@@ -102,6 +103,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
                 + KEY_CAP_RECOVERY_OF_EQUIPMENT + " REAL, "
                 + KEY_COST_LAND_AND_RENTAL_RATES + " REAL, "
                 + KEY_TAXES_AND_INSURANCE + " REAL, "
+                + KEY_MISCELLANEOUS + " REAL, "
                 + KEY_GENERAL_FARM_OVERHEAD + " REAL, "
                 + KEY_TOTAL_OVERHEAD_COST + " REAL, "
                 + KEY_TOTAL_COST + " REAL, "
@@ -152,6 +154,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
         values.put(KEY_CAP_RECOVERY_OF_EQUIPMENT, crop.getCapRecoveryOfEquip());
         values.put(KEY_COST_LAND_AND_RENTAL_RATES, crop.getCostOfLandRentalRate());
         values.put(KEY_TAXES_AND_INSURANCE, crop.getTaxesInsurance());
+        values.put(KEY_MISCELLANEOUS, crop.getMiscellaneous());
         values.put(KEY_GENERAL_FARM_OVERHEAD, crop.getGeneralFarmOverhead());
         values.put(KEY_TOTAL_OVERHEAD_COST, crop.getTotalOverheadCost());
         values.put(KEY_TOTAL_COST, crop.getTotalCost());
@@ -182,7 +185,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
                 KEY_FUEL_LUBE_ELECTRICITY, KEY_REPAIRS, KEY_IRRIGATION_WATER,
                 KEY_INTEREST_ON_CAP, KEY_TOTAL_OPERATIONAL_COSTS, KEY_HIRED_LABOR,
                 KEY_COST_UNPAID_LABOR, KEY_CAP_RECOVERY_OF_EQUIPMENT, KEY_COST_LAND_AND_RENTAL_RATES,
-                KEY_TAXES_AND_INSURANCE, KEY_GENERAL_FARM_OVERHEAD, KEY_TOTAL_OVERHEAD_COST,
+                KEY_TAXES_AND_INSURANCE, KEY_MISCELLANEOUS, KEY_GENERAL_FARM_OVERHEAD, KEY_TOTAL_OVERHEAD_COST,
                 KEY_TOTAL_COST, KEY_YIELD, KEY_PRICE, KEY_SIZE_ACRES_PLANTED
         }, "KEY_TITLE like" + title, null, null, null, null);
 
@@ -215,12 +218,13 @@ public class DatabaseStats extends SQLiteOpenHelper {
             crop.setCapRecoveryOfEquip(Float.parseFloat(cursor.getString(18)));
             crop.setCostOfLandRentalRate(Float.parseFloat(cursor.getString(19)));
             crop.setTaxesInsurance(Float.parseFloat(cursor.getString(20)));
-            crop.setGeneralFarmOverhead(Float.parseFloat(cursor.getString(21)));
-            //crop.setTotalOverheadCost(Float.parseFloat(cursor.getString(22)));
-            //crop.setTotalCost(Float.parseFloat(cursor.getString(23)));
-            crop.setYield(Integer.parseInt(cursor.getString(24)));
-            crop.setPrice(Float.parseFloat(cursor.getString(25)));
-            crop.setSizeAcresPlanted(Integer.parseInt(cursor.getString(26)));
+            crop.setMiscellaneous(Float.parseFloat(cursor.getString(21)));
+            crop.setGeneralFarmOverhead(Float.parseFloat(cursor.getString(22)));
+            //crop.setTotalOverheadCost(Float.parseFloat(cursor.getString(23)));
+            //crop.setTotalCost(Float.parseFloat(cursor.getString(24)));
+            crop.setYield(Integer.parseInt(cursor.getString(25)));
+            crop.setPrice(Float.parseFloat(cursor.getString(26)));
+            crop.setSizeAcresPlanted(Integer.parseInt(cursor.getString(27)));
 
         } else {
             crop = null;
@@ -275,6 +279,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
         values.put(KEY_CAP_RECOVERY_OF_EQUIPMENT, crop.getCapRecoveryOfEquip());
         values.put(KEY_COST_LAND_AND_RENTAL_RATES, crop.getCostOfLandRentalRate());
         values.put(KEY_TAXES_AND_INSURANCE, crop.getTaxesInsurance());
+        values.put(KEY_MISCELLANEOUS, crop.getMiscellaneous());
         values.put(KEY_GENERAL_FARM_OVERHEAD, crop.getGeneralFarmOverhead());
         values.put(KEY_TOTAL_OVERHEAD_COST, crop.getTotalOverheadCost());
         values.put(KEY_TOTAL_COST, crop.getTotalCost());
@@ -328,7 +333,7 @@ public class DatabaseStats extends SQLiteOpenHelper {
                 KEY_FUEL_LUBE_ELECTRICITY, KEY_REPAIRS, KEY_IRRIGATION_WATER,
                 KEY_INTEREST_ON_CAP, KEY_TOTAL_OPERATIONAL_COSTS, KEY_HIRED_LABOR,
                 KEY_COST_UNPAID_LABOR, KEY_CAP_RECOVERY_OF_EQUIPMENT, KEY_COST_LAND_AND_RENTAL_RATES,
-                KEY_TAXES_AND_INSURANCE, KEY_GENERAL_FARM_OVERHEAD, KEY_TOTAL_OVERHEAD_COST,
+                KEY_TAXES_AND_INSURANCE, KEY_MISCELLANEOUS, KEY_GENERAL_FARM_OVERHEAD, KEY_TOTAL_OVERHEAD_COST,
                 KEY_TOTAL_COST, KEY_YIELD, KEY_PRICE, KEY_SIZE_ACRES_PLANTED
         }, whereClause, whereArgs, null, null, orderBy);
 
@@ -359,12 +364,13 @@ public class DatabaseStats extends SQLiteOpenHelper {
                 corn.setCapRecoveryOfEquip(Float.parseFloat(cursor.getString(18)));
                 corn.setCostOfLandRentalRate(Float.parseFloat(cursor.getString(19)));
                 corn.setTaxesInsurance(Float.parseFloat(cursor.getString(20)));
-                corn.setGeneralFarmOverhead(Float.parseFloat(cursor.getString(21)));
-                //corn.setTotalOverheadCost(Float.parseFloat(cursor.getString(22)));
-                //corn.setTotalCost(Float.parseFloat(cursor.getString(23)));
-                corn.setYield(Integer.parseInt(cursor.getString(24)));
-                corn.setPrice(Float.parseFloat(cursor.getString(25)));
-                corn.setSizeAcresPlanted(Integer.parseInt(cursor.getString(26)));
+                corn.setMiscellaneous(Float.parseFloat(cursor.getString(21)));
+                corn.setGeneralFarmOverhead(Float.parseFloat(cursor.getString(22)));
+                //corn.setTotalOverheadCost(Float.parseFloat(cursor.getString(23)));
+                //corn.setTotalCost(Float.parseFloat(cursor.getString(24)));
+                corn.setYield(Integer.parseInt(cursor.getString(25)));
+                corn.setPrice(Float.parseFloat(cursor.getString(26)));
+                corn.setSizeAcresPlanted(Integer.parseInt(cursor.getString(27)));
                 list.add(corn);
                 cursor.moveToNext();
 

@@ -36,10 +36,45 @@ import java.util.TimerTask;
 public class Custom extends AppCompatActivity {
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
+
+        final TextView TOTAL_COST_VIEW = (TextView) findViewById(R.id.customTotalCost);
+        final ToggleButton COST_TOGGLE_BUTTON = (ToggleButton) findViewById(R.id.customToggleButton);
+
+
+        /**
+         * these are the first boxes that need to be manipulated
+         *
+         * the GUI should function such that the person enters some text
+         * and then the enter button then sets the text as a regular textbox
+         * also the enter button then becomes an edit button
+         */
+        final EditText ACRE_EDIT_TEXT = (EditText) findViewById(R.id.customAcreSetValue);
+        final TextView ACRE_DISPLAY = (TextView) findViewById(R.id.customAcreDisplayValue);
+
+        final EditText YIELD_EDIT_TEXT = (EditText) findViewById(R.id.customYieldSetValue);
+        final TextView YIELD_DISPLAY = (TextView) findViewById(R.id.customYieldDisplayValues);
+
+
+        final EditText SEED_SET = (EditText) findViewById(R.id.customSeedSetValue);
+        final EditText FERTILIZER_SET = (EditText) findViewById(R.id.customFertilizerSetValue);
+        final EditText CHEMICALS_SET = (EditText) findViewById(R.id.customChemicalsSetValue);
+        final EditText CUSTOM_OPS_SET = (EditText) findViewById(R.id.customCustomOpsSetValue);
+        final EditText FUEL_LUBE_SET = (EditText) findViewById(R.id.customFueLubeElecSetValue);
+        final EditText REPAIRS_SET = (EditText) findViewById(R.id.customRepairsSetValue);
+        final EditText IRRIGATION_WATER_SET = (EditText) findViewById(R.id.customIrrigationWaterSetValue);
+        final EditText INT_ON_CAP_SET = (EditText) findViewById(R.id.customIntOnCapSetValue);
+        final EditText HIRED_LABOR_SET = (EditText) findViewById(R.id.customHiredLaborSetValue);
+        final EditText UNPAID_LABOR_SET = (EditText) findViewById(R.id.customUnpaidLaborSetValue);
+        final EditText RECOVERY_EQUIP_SET = (EditText) findViewById(R.id.customRecoveryOfEquipSetValue);
+        final EditText LAND_RENTAL_RATE_SET = (EditText) findViewById(R.id.customLandRentalRateSetValue);
+        final EditText TAX_INSURANCE_SET = (EditText) findViewById(R.id.customTaxInsuranceSetValue);
+        final EditText MISC_SET = (EditText) findViewById(R.id.customMiscSetValue);
 
         setTitle("Customize Variables");
 
@@ -67,51 +102,7 @@ public class Custom extends AppCompatActivity {
         YIELD_ALERT.setTextColor(Color.RED);
 
 
-        final TextView TOTAL_COST_VIEW = (TextView) findViewById(R.id.customTotalCost);
-        final ToggleButton COST_TOGGLE_BUTTON = (ToggleButton) findViewById(R.id.customToggleButton);
 
-
-        /**
-         * these are the first boxes that need to be manipulated
-         *
-         * the GUI should function such that the person enters some text
-         * and then the enter button then sets the text as a regular textbox
-         * also the enter button then becomes an edit button
-         */
-        final EditText ACRE_EDIT_TEXT = (EditText) findViewById(R.id.customAcreSetValue);
-        final TextView ACRE_DISPLAY = (TextView) findViewById(R.id.customAcreDisplayValue);
-
-        final EditText YIELD_EDIT_TEXT = (EditText) findViewById(R.id.customYieldSetValue);
-        final TextView YIELD_DISPLAY = (TextView) findViewById(R.id.customYieldDisplayValues);
-
-        final EditText SEED_SET = (EditText) findViewById(R.id.customSeedSetValue);
-
-
-        final EditText FERTILIZER_SET = (EditText) findViewById(R.id.customFertilizerSetValue);
-
-        final EditText CHEMICALS_SET = (EditText) findViewById(R.id.customChemicalsSetValue);
-
-        final EditText CUSTOM_OPS_SET = (EditText) findViewById(R.id.customCustomOpsSetValue);
-
-        final EditText FUEL_LUBE_SET = (EditText) findViewById(R.id.customFueLubeElecSetValue);
-
-        final EditText REPAIRS_SET = (EditText) findViewById(R.id.customRepairsSetValue);
-
-        final EditText IRRIGATION_WATER_SET = (EditText) findViewById(R.id.customIrrigationWaterSetValue);
-
-        final EditText INT_ON_CAP_SET = (EditText) findViewById(R.id.customIntOnCapSetValue);
-
-        final EditText HIRED_LABOR_SET = (EditText) findViewById(R.id.customHiredLaborSetValue);
-
-        final EditText UNPAID_LABOR_SET = (EditText) findViewById(R.id.customUnpaidLaborSetValue);
-
-        final EditText RECOVERY_EQUIP_SET = (EditText) findViewById(R.id.customRecoveryOfEquipSetValue);
-
-        final EditText LAND_RENTAL_RATE_SET = (EditText) findViewById(R.id.customLandRentalRateSetValue);
-
-        final EditText TAX_INSURANCE_SET = (EditText) findViewById(R.id.customTaxInsuranceSetValue);
-
-        final EditText MISC_SET = (EditText) findViewById(R.id.customMiscSetValue);
 
         ACRE_EDIT_TEXT.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -1352,6 +1343,7 @@ public class Custom extends AppCompatActivity {
                     LAND_RENTAL_RATE_SET.setText(getCurrencyString(CROP.getCostOfLandRentalRate() * CROP.getSizeAcresPlanted()));
                     TAX_INSURANCE_SET.setText(getCurrencyString(CROP.getTaxesInsurance() * CROP.getSizeAcresPlanted()));
                     MISC_SET.setText(getCurrencyString(CROP.getMiscellaneous() * CROP.getSizeAcresPlanted()));
+                    Log.d("misc",CROP.getMiscellaneous()+"");
                     TOTAL_COST_VIEW.setText(getCurrencyString(CROP.getTotalCost() * CROP.getSizeAcresPlanted()));
 
                     // show the total cost per acre of each input
@@ -1377,6 +1369,15 @@ public class Custom extends AppCompatActivity {
             }
         });
 
+
+        /**
+         * these are the buttons that are at the top of the display
+         *
+         * SAVE_CROP allows you to save a new crop data, or you can overwrite a previously saved value
+         *
+         * PREV_SAVED_CROP allows you to delete or edit previously saved values
+         * once you've edited your values, then you have to click the SAVE_CROP button
+         */
         final Button SAVE_CROP = (Button) findViewById(R.id.customSaveState);
         final Button PREV_SAVED_CROP = (Button) findViewById(R.id.customPrevSavedStats);
 
@@ -1417,33 +1418,14 @@ public class Custom extends AppCompatActivity {
                         }
                         Log.d("title", title);
                         Log.d("countOfDbStats", "" + dbStats.getCropStatsCount());
-                        Toast.makeText(Custom.this, "Saved. Displaying regional data now.", Toast.LENGTH_LONG);
-                        setRegionalAverageValues(CROP.getCrop(), CROP.getRegion());
-
-                    }
-
-                    private void setRegionalAverageValues(int crop, int region) {
-
-                        CropStats cropStat = new CropStats(crop, region);
-
-                        SEED_SET.setText(getCurrencyString(cropStat.getSeed()));
-                        FERTILIZER_SET.setText(getCurrencyString(cropStat.getFertilizer()));
-                        CHEMICALS_SET.setText(getCurrencyString(cropStat.getChemicals()));
-                        CUSTOM_OPS_SET.setText(getCurrencyString(cropStat.getCustomOps()));
-                        FUEL_LUBE_SET.setText(getCurrencyString(cropStat.getFueLubeElec()));
-                        REPAIRS_SET.setText(getCurrencyString(cropStat.getRepairs()));
-                        IRRIGATION_WATER_SET.setText(getCurrencyString(cropStat.getIrrigationWater()));
-                        INT_ON_CAP_SET.setText(getCurrencyString(cropStat.getIntOnCap()));
-                        HIRED_LABOR_SET.setText(getCurrencyString(cropStat.getHiredLabor()));
-                        UNPAID_LABOR_SET.setText(getCurrencyString(cropStat.getCostUnpaidLabor()));
-                        RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStat.getCapRecoveryOfEquip()));
-                        LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStat.getCostOfLandRentalRate()));
-                        TAX_INSURANCE_SET.setText(getCurrencyString(cropStat.getTaxesInsurance()));
-                        TOTAL_COST_VIEW.setText(getCurrencyString(cropStat.getTotalCost()));
+                        Toast.makeText(Custom.this, "Saved. Displaying " + CROP.getTitle() + " data now.", Toast.LENGTH_LONG);
 
 
                     }
+
                 });
+
+                // overwrite button, you choose the title you want to modify
                 builder.setButton(AlertDialog.BUTTON_NEGATIVE, "OverWrite", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -1498,34 +1480,11 @@ public class Custom extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     dbStats.updateCrop(CROP, ARRAY_CROP.get(which).getTitle());
-                                    Toast.makeText(Custom.this, "Saved Data, values are now regional standard", Toast.LENGTH_LONG).show();
-                                    setRegionalAverageValues(CROP.getCrop(), CROP.getRegion());
-
+                                    Toast.makeText(Custom.this, "Saved Data, values are now from your " + CROP + " values.", Toast.LENGTH_LONG).show();
 
                                 }
 
-                                // regional a
-                                private void setRegionalAverageValues(int crop, int region) {
 
-                                    CropStats cropStat = new CropStats(crop, region);
-
-                                    SEED_SET.setText(getCurrencyString(cropStat.getSeed()));
-                                    FERTILIZER_SET.setText(getCurrencyString(cropStat.getFertilizer()));
-                                    CHEMICALS_SET.setText(getCurrencyString(cropStat.getChemicals()));
-                                    CUSTOM_OPS_SET.setText(getCurrencyString(cropStat.getCustomOps()));
-                                    FUEL_LUBE_SET.setText(getCurrencyString(cropStat.getFueLubeElec()));
-                                    REPAIRS_SET.setText(getCurrencyString(cropStat.getRepairs()));
-                                    IRRIGATION_WATER_SET.setText(getCurrencyString(cropStat.getIrrigationWater()));
-                                    INT_ON_CAP_SET.setText(getCurrencyString(cropStat.getIntOnCap()));
-                                    HIRED_LABOR_SET.setText(getCurrencyString(cropStat.getHiredLabor()));
-                                    UNPAID_LABOR_SET.setText(getCurrencyString(cropStat.getCostUnpaidLabor()));
-                                    RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStat.getCapRecoveryOfEquip()));
-                                    LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStat.getCostOfLandRentalRate()));
-                                    TAX_INSURANCE_SET.setText(getCurrencyString(cropStat.getTaxesInsurance()));
-                                    TOTAL_COST_VIEW.setText(getCurrencyString(cropStat.getTotalCost()));
-
-
-                                }
                             });
                             SPINNER_DIALOG.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -1564,11 +1523,10 @@ public class Custom extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
-                        Log.d("ccc crop", CROP.getCropName());
+                        // get all of the saved data cropstats for the chosen region and crop
                         final ArrayList<CropStats> arrayCrop = DB_STATS.getCropRegionCropStats(CROP.getCropName(), CROP.getRegionName());
                         String[] array = new String[arrayCrop.size()];
-                        //dbStats.close();
+
 
                         for (int i = 0; i < arrayCrop.size(); i++) {
 
@@ -1604,6 +1562,7 @@ public class Custom extends AppCompatActivity {
 
                             }
 
+                            // create the list of titles
                             Spinner spinner = new Spinner(Custom.this);
                             ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(Custom.this, android.R.layout.simple_spinner_item, array);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -1731,58 +1690,6 @@ public class Custom extends AppCompatActivity {
                 builder.show();
             }
 
-            // display the values that were chosen to edit
-            private void displayValues(CropStats cropStats) {
-
-                ToggleButton toggle = (ToggleButton) findViewById(R.id.customToggleButton);
-
-                ACRE_DISPLAY.setText(cropStats.getSizeAcresPlanted() + "");
-                YIELD_DISPLAY.setText(cropStats.getYield() + "");
-
-                // if the toggle button shows just the per acre values
-                if (!toggle.isChecked()) {
-
-                    SEED_SET.setText(getCurrencyString(cropStats.getSeed()));
-                    FERTILIZER_SET.setText(getCurrencyString(cropStats.getFertilizer()));
-                    CHEMICALS_SET.setText(getCurrencyString(cropStats.getChemicals()));
-                    CUSTOM_OPS_SET.setText(getCurrencyString(cropStats.getCustomOps()));
-                    FUEL_LUBE_SET.setText(getCurrencyString(cropStats.getFueLubeElec()));
-                    REPAIRS_SET.setText(getCurrencyString(cropStats.getRepairs()));
-                    IRRIGATION_WATER_SET.setText(getCurrencyString(cropStats.getIrrigationWater()));
-                    INT_ON_CAP_SET.setText(getCurrencyString(cropStats.getIntOnCap()));
-                    HIRED_LABOR_SET.setText(getCurrencyString(cropStats.getHiredLabor()));
-                    UNPAID_LABOR_SET.setText(getCurrencyString(cropStats.getCostUnpaidLabor()));
-                    RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStats.getCapRecoveryOfEquip()));
-                    LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStats.getCostOfLandRentalRate()));
-                    TAX_INSURANCE_SET.setText(getCurrencyString(cropStats.getTaxesInsurance()));
-                    TOTAL_COST_VIEW.setText(getCurrencyString(cropStats.getTotalCost()));
-
-
-                } else {
-
-                    SEED_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getSeed()));
-                    FERTILIZER_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getFertilizer()));
-                    CHEMICALS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getChemicals()));
-                    CUSTOM_OPS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCustomOps()));
-                    FUEL_LUBE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getFueLubeElec()));
-                    REPAIRS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getRepairs()));
-                    IRRIGATION_WATER_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getIrrigationWater()));
-                    INT_ON_CAP_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getIntOnCap()));
-                    HIRED_LABOR_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getHiredLabor()));
-                    UNPAID_LABOR_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCostUnpaidLabor()));
-                    RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCapRecoveryOfEquip()));
-                    LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCostOfLandRentalRate()));
-                    TAX_INSURANCE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getTaxesInsurance()));
-                    TOTAL_COST_VIEW.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getTotalCost()));
-
-                }
-
-
-                TextView currentCrop = (TextView) findViewById(R.id.customCurrentCrop);
-                currentCrop.setText("currently viewing: " + cropStats.getTitle());
-
-
-            }
 
         });
 
@@ -1790,8 +1697,7 @@ public class Custom extends AppCompatActivity {
         /**
          * this is the method that leads to go back to the model
          */
-
-        final Button MODEL_BUTTON = (Button) findViewById(R.id.customArrayCrop);
+        final Button MODEL_BUTTON = (Button) findViewById(R.id.customToModel);
         MODEL_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1855,34 +1761,38 @@ public class Custom extends AppCompatActivity {
                             // this method makes it so that the crop int chosen
                             // in the setSingleChoiceItems() method is then is added
                             // to the intent for passing to the Model page
-                            ArrayList<CropStats> modelCrops = new ArrayList<>();
-                            modelCrops.add(new CropStats(CROP.getCrop(), CROP.getRegion()));
-                            modelCrops.add(CROPS_ARRAY.get(itemsSelected.get(0)));
 
-                            // create the intent to go to the Model
-                            // include the parcelable arraylist of regional avg
-                            // and the custom crop
-                            Intent intent = new Intent(Custom.this, Model.class);
-                            intent.putParcelableArrayListExtra("crops", modelCrops);
-                            final ProgressDialog RENDER = ProgressDialog.show(Custom.this, "", "Rendering...", true);
-                            RENDER.setCancelable(false);
+                            if (itemsSelected.size() == 0){
+
+                            } else {
+                                ArrayList<CropStats> modelCrops = new ArrayList<>();
+                                modelCrops.add(new CropStats(CROP.getCrop(), CROP.getRegion()));
+                                modelCrops.add(CROPS_ARRAY.get(itemsSelected.get(0)));
+
+                                // create the intent to go to the Model
+                                // include the parcelable arraylist of regional avg
+                                // and the custom crop
+                                Intent intent = new Intent(Custom.this, Model.class);
+                                intent.putParcelableArrayListExtra("crops", modelCrops);
+                                final ProgressDialog RENDER = ProgressDialog.show(Custom.this, "", "Rendering...", true);
+                                RENDER.setCancelable(false);
 
 
-                            // this timer is used because the loading of the Model
-                            // takes a few seconds so a rendering popup is created
-                            new Timer().schedule(
-                                    new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            RENDER.dismiss();
+                                // this timer is used because the loading of the Model
+                                // takes a few seconds so a rendering popup is created
+                                new Timer().schedule(
+                                        new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                RENDER.dismiss();
 
-                                        }
-                                    },
-                                    5000L
-                            );
+                                            }
+                                        },
+                                        5000L
+                                );
 
-                            startActivity(intent);
-
+                                startActivity(intent);
+                            }
 
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1901,8 +1811,128 @@ public class Custom extends AppCompatActivity {
             }
         });
 
+        TextView reformatValues = (TextView) findViewById(R.id.customReformatValues);
+        reformatValues.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                displayValues(CROP);
+
+            }
+        });
+
+
+
+        // end of onCreate() method
+    }
+
+    // display the values that were chosen to edit
+    private void displayValues(CropStats cropStats) {
+
+
+        /**
+         * these are the first boxes that need to be manipulated
+         *
+         * the GUI should function such that the person enters some text
+         * and then the enter button then sets the text as a regular textbox
+         * also the enter button then becomes an edit button
+         */
+
+        final TextView TOTAL_COST_VIEW = (TextView) findViewById(R.id.customTotalCost);
+
+        final TextView ACRE_DISPLAY = (TextView) findViewById(R.id.customAcreDisplayValue);
+
+        final TextView YIELD_DISPLAY = (TextView) findViewById(R.id.customYieldDisplayValues);
+
+        final EditText SEED_SET = (EditText) findViewById(R.id.customSeedSetValue);
+
+        final EditText FERTILIZER_SET = (EditText) findViewById(R.id.customFertilizerSetValue);
+
+        final EditText CHEMICALS_SET = (EditText) findViewById(R.id.customChemicalsSetValue);
+
+        final EditText CUSTOM_OPS_SET = (EditText) findViewById(R.id.customCustomOpsSetValue);
+
+        final EditText FUEL_LUBE_SET = (EditText) findViewById(R.id.customFueLubeElecSetValue);
+
+        final EditText REPAIRS_SET = (EditText) findViewById(R.id.customRepairsSetValue);
+
+        final EditText IRRIGATION_WATER_SET = (EditText) findViewById(R.id.customIrrigationWaterSetValue);
+
+        final EditText INT_ON_CAP_SET = (EditText) findViewById(R.id.customIntOnCapSetValue);
+
+        final EditText HIRED_LABOR_SET = (EditText) findViewById(R.id.customHiredLaborSetValue);
+
+        final EditText UNPAID_LABOR_SET = (EditText) findViewById(R.id.customUnpaidLaborSetValue);
+
+        final EditText RECOVERY_EQUIP_SET = (EditText) findViewById(R.id.customRecoveryOfEquipSetValue);
+
+        final EditText LAND_RENTAL_RATE_SET = (EditText) findViewById(R.id.customLandRentalRateSetValue);
+
+        final EditText TAX_INSURANCE_SET = (EditText) findViewById(R.id.customTaxInsuranceSetValue);
+
+        final EditText MISC_SET = (EditText) findViewById(R.id.customMiscSetValue);
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.customToggleButton);
+
+        ACRE_DISPLAY.setText(cropStats.getSizeAcresPlanted() + "");
+        YIELD_DISPLAY.setText(cropStats.getYield() + "");
+
+        // if the toggle button shows just the per acre values
+        if (!toggle.isChecked()) {
+
+            SEED_SET.setText(getCurrencyString(cropStats.getSeed()));
+            FERTILIZER_SET.setText(getCurrencyString(cropStats.getFertilizer()));
+            CHEMICALS_SET.setText(getCurrencyString(cropStats.getChemicals()));
+            CUSTOM_OPS_SET.setText(getCurrencyString(cropStats.getCustomOps()));
+            FUEL_LUBE_SET.setText(getCurrencyString(cropStats.getFueLubeElec()));
+            REPAIRS_SET.setText(getCurrencyString(cropStats.getRepairs()));
+            IRRIGATION_WATER_SET.setText(getCurrencyString(cropStats.getIrrigationWater()));
+            INT_ON_CAP_SET.setText(getCurrencyString(cropStats.getIntOnCap()));
+            HIRED_LABOR_SET.setText(getCurrencyString(cropStats.getHiredLabor()));
+            UNPAID_LABOR_SET.setText(getCurrencyString(cropStats.getCostUnpaidLabor()));
+            RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStats.getCapRecoveryOfEquip()));
+            LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStats.getCostOfLandRentalRate()));
+            TAX_INSURANCE_SET.setText(getCurrencyString(cropStats.getTaxesInsurance()));
+            MISC_SET.setText(getCurrencyString(cropStats.getMiscellaneous()));
+            TOTAL_COST_VIEW.setText(getCurrencyString(cropStats.getTotalCost()));
+
+
+        } else {
+
+            SEED_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getSeed()));
+            FERTILIZER_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getFertilizer()));
+            CHEMICALS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getChemicals()));
+            CUSTOM_OPS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCustomOps()));
+            FUEL_LUBE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getFueLubeElec()));
+            REPAIRS_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getRepairs()));
+            IRRIGATION_WATER_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getIrrigationWater()));
+            INT_ON_CAP_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getIntOnCap()));
+            HIRED_LABOR_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getHiredLabor()));
+            UNPAID_LABOR_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCostUnpaidLabor()));
+            RECOVERY_EQUIP_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCapRecoveryOfEquip()));
+            LAND_RENTAL_RATE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getCostOfLandRentalRate()));
+            TAX_INSURANCE_SET.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getTaxesInsurance()));
+            MISC_SET.setText(getCurrencyString(cropStats.getMiscellaneous() * cropStats.getSizeAcresPlanted()));
+            TOTAL_COST_VIEW.setText(getCurrencyString(cropStats.getSizeAcresPlanted() * cropStats.getTotalCost()));
+
+        }
+
+
+        TextView currentCrop = (TextView) findViewById(R.id.customCurrentCrop);
+
+        if (cropStats.getTitle()== null){
+
+            currentCrop.setText("Stats not yet saved");
+
+        } else {
+
+            currentCrop.setText("Currently viewing: " + cropStats.getTitle());
+
+        }
 
     }
+
+
 
 
     /**
