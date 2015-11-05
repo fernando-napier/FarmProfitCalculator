@@ -1480,7 +1480,7 @@ public class Custom extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     dbStats.updateCrop(CROP, ARRAY_CROP.get(which).getTitle());
-                                    Toast.makeText(Custom.this, "Saved Data, values are now from your " + CROP + " values.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Custom.this, "Saved Data, values are now from your " + CROP.getTitle() + " values.", Toast.LENGTH_LONG).show();
 
                                 }
 

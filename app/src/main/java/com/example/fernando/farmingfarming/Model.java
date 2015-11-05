@@ -368,6 +368,12 @@ public class Model extends AppCompatActivity {
 
         String string = "Profit Analysis:\n\n";
 
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+        String customLessRegion = nf.format(custom.getProfitFloat() - region.getProfitFloat());
+
+        String regionLessCustom = nf.format(region.getProfitFloat() - custom.getProfitFloat());
+
         // first find out if they are making a profit
         if (custom.getProfitFloat() > 0) {
 
@@ -381,14 +387,14 @@ public class Model extends AppCompatActivity {
                 // check if they are profiting better than their region
                 if (region.getProfitFloat() > custom.getProfitFloat()) {
 
-                    string = string + (region.getProfitFloat() - custom.getProfitFloat()) + " less than your region's average."
+                    string = string + regionLessCustom + " less than your region's average."
                             + "Your bottom line looks good";
 
 
                 } else if (region.getProfitFloat() < custom.getProfitFloat()) {
 
-                    string = string + (custom.getProfitFloat() - region.getProfitFloat()) + " more than your region's average. You turned a profit"
-                            + "and beat the region average, it takes a great business mind to do so. Your bottom line looks very good!";
+                    string = string + customLessRegion + " more than your region's average. You turned a profit"
+                            + " and beat the region average, it takes a great business mind to do so. Your bottom line looks very good!";
 
 
                 }
@@ -425,15 +431,15 @@ public class Model extends AppCompatActivity {
                 // check if they are profiting better than their region
                 if (region.getProfitFloat() > custom.getProfitFloat()) {
 
-                    string = string + (region.getProfitFloat() - custom.getProfitFloat()) + " less than your region's average."
-                            + "Maybe you should look at making a few input changes." +
-                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+                    string = string + regionLessCustom + " less than your region's average."
+                            + "Maybe you should look at making a few input changes. " +
+                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line.";
 
 
                 } else if (region.getProfitFloat() < custom.getProfitFloat()) {
 
-                    string = string + (custom.getProfitFloat() - region.getProfitFloat()) + " more than your region's average." +
-                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+                    string = string + customLessRegion + " more than your region's average." +
+                            "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line.";
 
 
                 }
@@ -442,7 +448,7 @@ public class Model extends AppCompatActivity {
             } else {
 
                 string = string + " about the same as your region." +
-                        "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line";
+                        " There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line.";
 
 
             }
@@ -475,6 +481,8 @@ public class Model extends AppCompatActivity {
         Log.d("custom overhead", "" + custom.getTotalOverheadCost());
         Log.d("custom operational", "" + custom.getTotalOperationalCosts());
         Log.d("custom misc", "" + custom.getMiscellaneous());
+
+
 
         String string = "Cost Analysis: \n\n";
 
