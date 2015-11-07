@@ -24,11 +24,13 @@
         </activity>
         <activity
             android:name=".Model"
-            android:label="@string/title_activity_model">
+            android:label="@string/title_activity_model"
+            android:launchMode="singleInstance">
         </activity>
         <activity
             android:name=".Custom"
-            android:label="@string/title_activity_custom">
+            android:label="@string/title_activity_custom"
+            android:launchMode="singleInstance">
         </activity>
     </application>
 

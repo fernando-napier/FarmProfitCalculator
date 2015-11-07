@@ -37,34 +37,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="Edit Previous save"
+                android:text="@string/custom_prev_saved_stats"
                 android:background="@drawable/rectangle"
                 android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                />
 
-            <Button
-                android:id="@+id/customSaveState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="Save crop values"
-                android:background="@drawable/rectangle"
-                android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                />
-
-
-
+                android:paddingRight="10sp" />
 
 
             <TextView
                 android:id="@+id/customAcresTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/customSaveState"
+                android:layout_below="@+id/customPrevSavedStats"
                 android:paddingTop="20sp"
-                android:text="How many Acres do you farm?" />
+                android:text="custom_acres_title" />
 
             <EditText
                 android:id="@+id/customAcreSetValue"
@@ -76,7 +62,7 @@
                 android:textSize="40sp"
                 android:maxLength="10"
                 android:imeOptions="actionDone"
-                android:text="Set Value"
+                android:hint="@string/custom_set_value"
                 android:visibility="invisible"
                 android:textColor="@color/abc_search_url_text_normal" />
 
@@ -101,7 +87,7 @@
                 android:layout_below="@+id/customAcresTitle"
                 android:gravity="center"
                 android:layout_above="@+id/customYieldTitle"
-                android:text="Click on the textbox to enter how many acres you farm"
+                android:text="@string/custom_acres_alert"
                 android:textSize="10sp"
                 android:visibility="visible"
                 android:layout_toRightOf="@+id/customAcreSetValue" />
@@ -114,7 +100,7 @@
                 android:layout_below="@+id/customAcreDisplayValue"
                 android:paddingTop="20sp"
                 android:gravity="center"
-                android:text="What was your yield? (Bushels per Acre)" />
+                android:text="@string/custom_yield_title" />
 
             <EditText
                 android:id="@+id/customYieldSetValue"
@@ -126,7 +112,7 @@
                 android:textSize="40sp"
                 android:maxLength="10"
                 android:imeOptions="actionDone"
-                android:text="Set Value"
+                android:hint="@string/custom_set_value"
                 android:visibility="invisible"
                 android:textColor="@color/abc_search_url_text_normal" />
 
@@ -152,7 +138,7 @@
                 android:layout_above="@+id/customInputsTitle"
                 android:paddingBottom="5sp"
                 android:gravity="center"
-                android:text="Click on the text to enter in your yield per acre."
+                android:text="@string/custom_yield_alert"
                 android:textSize="10sp"
                 android:visibility="visible" />
 
@@ -178,24 +164,24 @@
                 android:gravity="center"
                 android:paddingBottom="10sp"
                 android:paddingTop="10sp"
-                android:text="Enter your input values:"
+                android:text="@string/custom_inputs_title"
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/customCheckBoxClarification"
+                android:id="@+id/customInputClarification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/customInputsTitle"
                 android:gravity="center"
                 android:paddingBottom="10sp"
-                android:text="* the checkbox is used to signify which of the inputs you would like to visualize on the graphs " />
+                android:text="@string/custom_input_clarification"/>
 
             <Button
                 android:id="@+id/customToModel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/customCheckBoxClarification"
-                android:text="Go to model"
+                android:layout_below="@+id/customInputClarification"
+                android:text="@string/custom_goto_model"
                 android:background="@drawable/rectangle"
                 android:paddingLeft="10sp"
                 android:paddingRight="10sp"
@@ -230,7 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/customToggleButton"
-                android:text="Re-format values"/>
+                android:text="@string/custom_reformat_values"/>
 
 
             <TextView
@@ -257,7 +243,7 @@
                 android:layout_below="@id/customToggleButton"
                 android:gravity="center"
                 android:layout_marginRight="10sp"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -287,7 +273,7 @@
                 android:layout_marginRight="10sp"
                 android:layout_below="@+id/customSeedSetValue"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -317,7 +303,7 @@
                 android:layout_marginRight="10sp"
                 android:layout_below="@+id/customFertilizerSetValue"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -346,7 +332,7 @@
                 android:layout_below="@+id/customChemicalsSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -376,7 +362,7 @@
                 android:layout_below="@+id/customCustomOpsSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -407,7 +393,7 @@
                 android:layout_marginRight="10sp"
                 android:layout_below="@+id/customFueLubeElecSetValue"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -436,7 +422,7 @@
                 android:layout_below="@+id/customRepairsSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -467,7 +453,7 @@
                 android:layout_below="@+id/customIrrigationWaterSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -497,7 +483,7 @@
                 android:layout_below="@+id/customIntOnCapSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -527,7 +513,7 @@
                 android:layout_below="@+id/customHiredLaborSetValue"
                 android:layout_marginRight="10sp"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -556,7 +542,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/customUnpaidLaborSetValue"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />
@@ -585,7 +571,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/customRecoveryOfEquipSetValue"
                 android:gravity="center"
-                android:text="Set Value"
+                android:text="@string/custom_set_value"
                 android:inputType="number"
                 android:maxLength="15"
                 android:textColor="@color/abc_search_url_text_normal" />

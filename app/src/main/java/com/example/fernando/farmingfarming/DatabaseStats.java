@@ -118,6 +118,8 @@ public class DatabaseStats extends SQLiteOpenHelper {
 
     //upgrading the database
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        //TODO: add saving of rows that are already saved so that you don't lose the user data
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATS);
 

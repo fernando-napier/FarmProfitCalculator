@@ -31,16 +31,34 @@
         />
     
     <TextView
-        android:id="@+id/welcomeRegionText"
+        android:id="@+id/welcomeRegionImageOpen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Regions Image"
+        android:text="@string/welcome_region_open"
         android:textColor="@color/White"
         android:background="@color/gray"
         android:paddingLeft="10sp"
         android:paddingRight="10sp"
         android:layout_alignBottom="@+id/welcomeSlider"
-        android:layout_marginBottom="68sp" />
+        android:layout_marginBottom="68sp"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/welcomeRegionImageClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_region_close"
+        android:textColor="@color/White"
+        android:background="@color/gray"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:layout_alignBottom="@+id/welcomeSlider"
+        android:layout_marginBottom="68sp"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        />
+
+
 
     <com.ortiz.touch.TouchImageView
         android:id="@+id/welcomeTouchImage"
