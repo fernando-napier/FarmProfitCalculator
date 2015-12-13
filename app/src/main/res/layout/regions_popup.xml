@@ -8,11 +8,12 @@
 
 
     <TextView
+        android:layout_marginTop="15sp"
         android:id="@+id/regionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Each state could have multiple regions."
-        android:textColor="@color/Ivory"
+        android:textColor="@color/DarkGreen"
         />
 
     <com.example.touch.TouchImageView

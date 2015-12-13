@@ -37,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
                 android:text="@string/custom_prev_saved_stats"
                 android:background="@drawable/rectangle"
                 android:paddingLeft="10sp"
@@ -50,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/customPrevSavedStats"
                 android:paddingTop="20sp"
-                android:text="custom_acres_title" />
+                android:text="@string/custom_acres_title" />
 
             <EditText
                 android:id="@+id/customAcreSetValue"

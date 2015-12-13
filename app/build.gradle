@@ -5,10 +5,10 @@ android {
     buildToolsVersion '23.0.0'
 
     defaultConfig {
-        applicationId "com.example.fernando.farmingfarming"
+        applicationId "com.fernando.farmprofitcalculator"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
+        versionCode 2
         versionName "1.0"
     }
     buildTypes {

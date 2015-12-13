@@ -11,8 +11,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -21,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.github.mikephil.charting.buffer.HorizontalBarBuffer;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -35,22 +35,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ValueFormatter;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 
 public class Model extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +61,8 @@ public class Model extends AppCompatActivity {
 
                 boolean on = toggle.isChecked();
 
+                TextView textTop = (TextView) findViewById(R.id.modelInputValueTop);
+                TextView textBottom = (TextView) findViewById(R.id.modelInputValueBottom);
                 PieChart region = (PieChart) findViewById(R.id.modelRegionPieChart);
                 PieChart custom = (PieChart) findViewById(R.id.modelCustomPieChart);
                 HorizontalBarChart bar = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
@@ -75,10 +72,17 @@ public class Model extends AppCompatActivity {
                     region.setVisibility(View.INVISIBLE);
                     custom.setVisibility(View.INVISIBLE);
                     bar.setVisibility(View.VISIBLE);
+                    textTop.setVisibility(View.VISIBLE);
+                    textBottom.setVisibility(View.VISIBLE);
+
+
                 } else if (!on) {
                     region.setVisibility(View.VISIBLE);
                     custom.setVisibility(View.VISIBLE);
                     bar.setVisibility(View.INVISIBLE);
+                    textTop.setVisibility(View.INVISIBLE);
+                    textBottom.setVisibility(View.INVISIBLE);
+
                 }
 
             }
@@ -103,6 +107,7 @@ public class Model extends AppCompatActivity {
                 Intent i = new Intent(Model.this, Custom.class);
                 i.putParcelableArrayListExtra("crops", cropStatsArrayList);
                 startActivity(i);
+
             }
         });
 
@@ -114,68 +119,14 @@ public class Model extends AppCompatActivity {
         setTitle(REGIONAL_AVERAGE.getCropName() + " in " + regionData.getRegionName());
 
 
-        Button homeButton = (Button) findViewById(R.id.modelWelcomeButton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(Model.this, Welcome.class));
-
-            }
-        });
-        // get the statistics for the region 
-
-
-        /**
-         * this if else statement is used to verify if
-         */
-
-        // create the
-        HorizontalBarChart inputBarChart = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
-        inputBarChart.setDrawBarShadow(true);
-        inputBarChart.setDrawValueAboveBar(true);
-        inputBarChart.setDescription("");
-        inputBarChart.setPinchZoom(false);
-        inputBarChart.setDrawGridBackground(true);
-        inputBarChart.setDoubleTapToZoomEnabled(false);
-
-        // create the xAxis for the
-        XAxis xAxis = inputBarChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(true);
-        xAxis.setGridLineWidth(0.3f);
-
-        // create the left and right y-axes for the horizontal input barchart
-        YAxis leftAxis = inputBarChart.getAxisLeft();
-        leftAxis.setDrawAxisLine(true);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setGridLineWidth(0.3f);
-
-        YAxis rightAxis = inputBarChart.getAxisRight();
-        rightAxis.setDrawAxisLine(true);
-        rightAxis.setDrawGridLines(false);
-
-        // create the legend for bar chart
-        Legend legend = inputBarChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        legend.setWordWrapEnabled(true);
-        legend.setFormSize(8f);
-        legend.setXEntrySpace(4f);
-
-        // set the data for the bar chart using the getBarChartData(CropData) method
-        // the only way for a chart to render is to invalidate it
-        BarData costData = getBarChartData(cropStatsArrayList.get(0), cropStatsArrayList.get(1));
-        inputBarChart.setData(costData);
-        inputBarChart.setOnChartValueSelectedListener(listener);
-        inputBarChart.invalidate();
+        // get the statistics for the region
+        getInputChart(cropStatsArrayList.get(0), cropStatsArrayList.get(1));
 
         // the render method creates the and generates the chart
         renderPieValues(cropStatsArrayList);
 
-        // set the text for the inputs analysis
+        // set the text for the inputs/profit analysis
         inputsAnalysis(cropStatsArrayList);
-
         profitAnalysis(cropStatsArrayList);
 
 
@@ -196,36 +147,34 @@ public class Model extends AppCompatActivity {
 
 
         // if had already set a price for the bushel
+        final TextView priceText = (TextView) findViewById(R.id.modelPriceBushelText);
         final EditText pricePerBushel = (EditText) findViewById(R.id.modelPriceBushel);
+        pricePerBushel.setFocusable(true);
+
         if (cropStatsArrayList.get(1).getPrice() == cropStatsArrayList.get(0).getPrice()) {
 
-            Log.d("price reg", cropStatsArrayList.get(0).getPrice() + "");
-            Log.d("price custom", cropStatsArrayList.get(1).getPrice() + "");
 
             pricePerBushel.setHint("Regional Average: " + REGIONAL_AVERAGE.getPrice());
 
         } else {
 
-            pricePerBushel.setHint("" + cropStatsArrayList.get(1).getPrice());
-
-
-            Log.d("price reg", cropStatsArrayList.get(0).getPrice() + "");
-            Log.d("price custom", cropStatsArrayList.get(1).getPrice() + "");
+            pricePerBushel.setHint(cropStatsArrayList.get(1).getTitle() + " price: " + cropStatsArrayList.get(1).getPrice());
 
 
         }
 
         // create the listeners for the graphs
         HorizontalBarChart returnsChart = getReturnsGraph(cropStatsArrayList);
-        returnsChart.setOnChartValueSelectedListener(listener);
+        returnsChart.setOnChartValueSelectedListener(returnsListener);
         HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
-        profitChart.setOnChartValueSelectedListener(listener);
+        profitChart.setOnChartValueSelectedListener(profitListener);
 
 
         // set a text watcher for the price per bushel
         pricePerBushel.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
 
             }
 
@@ -242,13 +191,12 @@ public class Model extends AppCompatActivity {
                     try {
                         cropStatsArrayList.get(1).setPrice(value);
                         HorizontalBarChart returnsChart = getReturnsGraph(cropStatsArrayList);
-                        returnsChart.setOnChartValueSelectedListener(listener);
+                        returnsChart.setOnChartValueSelectedListener(returnsListener);
                         HorizontalBarChart profitChart = getProfitGraph(cropStatsArrayList);
-                        profitChart.setOnChartValueSelectedListener(listener);
+                        profitChart.setOnChartValueSelectedListener(profitListener);
 
                         DatabaseStats dbStats = new DatabaseStats(getApplicationContext());
                         dbStats.updateCrop(cropStatsArrayList.get(1), cropStatsArrayList.get(1).getTitle());
-
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -265,10 +213,33 @@ public class Model extends AppCompatActivity {
 
 
                 profitAnalysis(cropStatsArrayList);
+                // pricePerBushel.setHint("Custom Price: " + cropStatsArrayList.get(1).getPrice());
 
 
             }
 
+        });
+
+        pricePerBushel.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    pricePerBushel.setText(null);
+                    pricePerBushel.setHint(cropStatsArrayList.get(1).getTitle() + " price: " + cropStatsArrayList.get(1).getPrice());
+                    return false;
+                }
+                return true;
+            }
+
+        });
+
+        priceText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                priceText.setVisibility(View.INVISIBLE);
+                pricePerBushel.setHint(cropStatsArrayList.get(1).getTitle() + " price: " + cropStatsArrayList.get(1).getPrice());
+            }
         });
 
 
@@ -300,8 +271,8 @@ public class Model extends AppCompatActivity {
 
 
         // just a little popup if they click the heading for model commodity pricing
-        Button modelCommdityButton = (Button) findViewById(R.id.modelCommodityText);
-        modelCommdityButton.setOnClickListener(new View.OnClickListener() {
+        Button modelCommodityButton = (Button) findViewById(R.id.modelCommodityText);
+        modelCommodityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog alert = new AlertDialog.Builder(Model.this).create();
@@ -358,6 +329,185 @@ public class Model extends AppCompatActivity {
 
     }
 
+
+    /**
+     * inputs chart is overlayed over pie chart values
+     */
+
+    private void getInputChart(CropStats defaults, CropStats custom) {
+
+        // create the
+        HorizontalBarChart inputBarChart = (HorizontalBarChart) findViewById(R.id.modelInputsBarChart);
+        inputBarChart.setDrawBarShadow(true);
+        inputBarChart.setDrawValueAboveBar(true);
+        inputBarChart.setDescription("");
+        inputBarChart.setPinchZoom(false);
+        inputBarChart.setDrawGridBackground(true);
+        inputBarChart.setDoubleTapToZoomEnabled(false);
+
+        // create the xAxis for the
+        XAxis xAxis = inputBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(true);
+        xAxis.setGridLineWidth(0.3f);
+
+        // create the left and right y-axes for the horizontal input barchart
+        YAxis leftAxis = inputBarChart.getAxisLeft();
+        leftAxis.setDrawAxisLine(true);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setGridLineWidth(0.3f);
+
+        YAxis rightAxis = inputBarChart.getAxisRight();
+        rightAxis.setDrawAxisLine(true);
+        rightAxis.setDrawGridLines(false);
+
+        // create the legend for bar chart
+        Legend legend = inputBarChart.getLegend();
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        legend.setWordWrapEnabled(true);
+        legend.setFormSize(8f);
+        legend.setXEntrySpace(4f);
+
+
+        ArrayList<BarEntry> defaultEntries = new ArrayList<>();
+        ArrayList<BarEntry> customEntries = new ArrayList<>();
+
+        // get the ordered results for only the default values, that way you don't run the risk
+        // of having the wrong amounts for the wrong labels in the custom results,
+        // mostly because of the high probability of the high to low values being different for
+        // the default and what a custom setting could show
+        ArrayList<CropStats.Result> defaultResult = defaults.getOrderedCostValues();
+        ArrayList<CropStats.Result> customResult = custom.getUnorderedCostValues();
+
+        // set the barEntries based on the high to low concept
+        for (int i = 0; i < defaultResult.size(); i++) {
+            defaultEntries.add(new BarEntry(defaultResult.get(i).getValue(), i));
+        }
+
+        // set these values to mimic the previous setting
+        // get the ordered result, and it's original index
+        for (int i = 0; i < customResult.size(); i++) {
+            int index = defaultResult.get(i).getIndex();
+            customEntries.add(new BarEntry(customResult.get(index).getValue(), i));
+
+        }
+
+
+        // these two methods are made to set the x axis
+        ArrayList<Integer> indices = defaults.getIndices(defaultResult);
+        ArrayList<String> xValues = getChartStrings(indices);
+
+        BarDataSet defaultDataSet = new BarDataSet(defaultEntries, "Region Average");
+        defaultDataSet.setColor(Color.BLUE);
+        defaultDataSet.setValueFormatter(new MyValueFormatter());
+        defaultDataSet.setValueTextSize(8f);
+
+        BarDataSet customDataSet = new BarDataSet(customEntries, "Custom Values");
+        customDataSet.setColor(Color.RED);
+        customDataSet.setValueFormatter(new MyValueFormatter());
+        customDataSet.setValueTextSize(8f);
+
+        List<BarDataSet> barDataSets = new ArrayList<>();
+        barDataSets.add(customDataSet);
+        barDataSets.add(defaultDataSet);
+
+
+        BarData barData = new BarData(xValues, barDataSets);
+
+        // set the data for the bar chart using the getBarChartData(CropData) method
+        // the only way for a chart to render is to invalidate it
+        inputBarChart.setData(barData);
+        inputBarChart.setOnChartValueSelectedListener(inputListener);
+        inputBarChart.invalidate();
+
+
+    }
+
+
+    /**
+     *  this onchart listener works for both the returns and profits
+     */
+
+    private OnChartValueSelectedListener inputListener = new OnChartValueSelectedListener() {
+        @Override
+        public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+
+            TextView textTop = (TextView) findViewById(R.id.modelInputValueTop);
+            TextView textBottom = (TextView) findViewById(R.id.modelInputValueBottom);
+            String text = decimalFormatter(e.getVal());
+            textTop.setText("Value: " + text);
+            textBottom.setText("Value: " + text);
+
+
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+            TextView textTop = (TextView) findViewById(R.id.modelInputValueTop);
+            TextView textBottom = (TextView) findViewById(R.id.modelInputValueBottom);
+            textTop.setHint("No value selected");
+            textBottom.setHint("No value selected");
+
+
+        }
+    };
+
+
+    // this onchart listener works for both the returns and profits
+    private OnChartValueSelectedListener returnsListener = new OnChartValueSelectedListener() {
+        @Override
+        public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+            TextView returns = (TextView) findViewById(R.id.modelReturnsValues);
+            String text = decimalFormatter(e.getVal());
+            returns.setText("Value " + text);
+
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+            TextView returns = (TextView) findViewById(R.id.modelProfitValues);
+            returns.setHint("No value selected");
+
+
+        }
+    };
+
+
+    // this onchart listener works for both the returns and profits
+    private OnChartValueSelectedListener profitListener = new OnChartValueSelectedListener() {
+        @Override
+        public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+            TextView profit = (TextView) findViewById(R.id.modelProfitValues);
+            String text = decimalFormatter(e.getVal());
+            profit.setText("Value " + text);
+
+        }
+
+        @Override
+        public void onNothingSelected() {
+
+            TextView profit = (TextView) findViewById(R.id.modelProfitValues);
+            profit.setHint("No value selected");
+
+
+        }
+    };
+
+
+    // formatting
+    private String decimalFormatter(float value) {
+        DecimalFormat formatter = new DecimalFormat("$#,###,###.##");
+        return formatter.format(value);
+
+
+    }
+
     // add some text that explains returns
     private void profitAnalysis(ArrayList<CropStats> cropStats) {
 
@@ -397,7 +547,12 @@ public class Model extends AppCompatActivity {
                             + " and beat the region average, it takes a great business mind to do so. Your bottom line looks very good!";
 
 
+                } else {
+
+                    string = string + "the same as your region, or you have not set your own values. If you have not set values then press the back button and set your own values.";
+
                 }
+
 
             } else if (region.getProfitFloat() < 0) {
 
@@ -431,7 +586,7 @@ public class Model extends AppCompatActivity {
                 // check if they are profiting better than their region
                 if (region.getProfitFloat() > custom.getProfitFloat()) {
 
-                    string = string + regionLessCustom + " less than your region's average."
+                    string = string + regionLessCustom + " less than your region's average. "
                             + "Maybe you should look at making a few input changes. " +
                             "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line.";
 
@@ -441,6 +596,10 @@ public class Model extends AppCompatActivity {
                     string = string + customLessRegion + " more than your region's average." +
                             "There are studies that show that reducing inputs may lower your yield but lower your costs exponentially per acre. Hopefully this helps your bottom line.";
 
+
+                } else {
+
+                    string = string + "the exact same as your region. Its either that, or you did not set your own values.";
 
                 }
 
@@ -455,7 +614,7 @@ public class Model extends AppCompatActivity {
 
         } else {
 
-            string = string + "It looks as though you haven't set any custom values. If you did set some values, either you are right on the average values for your region "+
+            string = string + "It looks as though you haven't set any custom values. If you did set some values, either you are right on the average values for your region " +
                     "or there is some errors within this program. Let the developer of this application know by submitting a review on the app store reviews. Thanks!";
 
 
@@ -481,7 +640,6 @@ public class Model extends AppCompatActivity {
         Log.d("custom overhead", "" + custom.getTotalOverheadCost());
         Log.d("custom operational", "" + custom.getTotalOperationalCosts());
         Log.d("custom misc", "" + custom.getMiscellaneous());
-
 
 
         String string = "Cost Analysis: \n\n";
@@ -520,8 +678,6 @@ public class Model extends AppCompatActivity {
      * this method takes the 2 cropstats are rendered into their pie values
      * this creates two different pie charts, one for the regional averages
      * and one for the custom values
-     *
-     * @param cropStats
      */
 
     private void renderPieValues(ArrayList<CropStats> cropStats) {
@@ -529,7 +685,7 @@ public class Model extends AppCompatActivity {
 
         /**
          * make sure the indexes of none of the entries are the same,
-         * even if they are comparisons, because it will not show on
+         * even if they are comparisons
          *
          * also make sure that the slices that are zero, not be included
          */
@@ -691,96 +847,147 @@ public class Model extends AppCompatActivity {
 
     }
 
+    // create the graph that shows the returns for the regional avg and for the user data
+    private HorizontalBarChart getReturnsGraph(ArrayList<CropStats> cropStatsArrayList) {
+        // horizontal bar chart used for visualizing returns
+        HorizontalBarChart returnsChart = (HorizontalBarChart) findViewById(R.id.modelReturnsChart);
 
-    /**
-     * this section of the code is the individual methods made.
-     */
+        XAxis xAxis1 = returnsChart.getXAxis();
+        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis1.setDrawAxisLine(true);
+        xAxis1.setDrawGridLines(true);
+        xAxis1.setGridLineWidth(0.3f);
 
 
-    // this onchart listener works for both the returns and profits
-    private OnChartValueSelectedListener listener = new OnChartValueSelectedListener() {
-        @Override
-        public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        YAxis leftAxis1 = returnsChart.getAxisLeft();
+        leftAxis1.setDrawAxisLine(true);
+        leftAxis1.setDrawGridLines(false);
+        leftAxis1.setGridLineWidth(0.3f);
 
 
-            String text = decimalFormatter(e.getVal());
-            Toast.makeText(Model.this, text, Toast.LENGTH_SHORT).show();
+        YAxis rightAxis1 = returnsChart.getAxisRight();
+        rightAxis1.setDrawAxisLine(true);
+        rightAxis1.setDrawGridLines(false);
+
+        returnsChart.setDrawBarShadow(true);
+        returnsChart.setDrawValueAboveBar(true);
+        returnsChart.setDescription("");
+        returnsChart.setPinchZoom(false);
+        returnsChart.setDrawGridBackground(true);
+
+
+        ArrayList<BarEntry> defaultReturnEntry = new ArrayList<>();
+        ArrayList<BarEntry> customReturnEntry = new ArrayList<>();
+        ArrayList<String> returnStrings = new ArrayList<>();
+        ArrayList<BarDataSet> returnsDataSet = new ArrayList<>();
+        returnStrings.add("Grain");
+
+        Log.d("reg return", cropStatsArrayList.get(0).getTotalReturns() + "");
+        Log.d("custom return", cropStatsArrayList.get(1).getTotalReturns() + "");
+        if (cropStatsArrayList.size() >= 1) {
+            defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getTotalReturns(), 0));
+            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
+            defaultDataSet.setValueFormatter(new MyValueFormatter());
+            defaultDataSet.setColor(Color.BLUE);
+            returnsDataSet.add(defaultDataSet);
+
 
         }
-
-        @Override
-        public void onNothingSelected() {
-
+        if (cropStatsArrayList.size() >= 2) {
+            customReturnEntry.add(new BarEntry(cropStatsArrayList.get(1).getTotalReturns(), 0));
+            BarDataSet customDataSet = new BarDataSet(customReturnEntry, "Custom");
+            customDataSet.setValueFormatter(new MyValueFormatter());
+            customDataSet.setColor(Color.RED);
+            returnsDataSet.add(customDataSet);
         }
-    };
-
-    // formatting
-    private String decimalFormatter(float value) {
-        DecimalFormat formatter = new DecimalFormat("$#,###,###.##");
-        return formatter.format(value);
 
 
+        BarData returnData = new BarData(returnStrings, returnsDataSet);
+        returnData.setValueFormatter(new MyValueFormatter());
+        returnsChart.setData(returnData);
+
+        Legend returnLegend = returnsChart.getLegend();
+        returnLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        returnLegend.setWordWrapEnabled(true);
+        returnLegend.setFormSize(8f);
+        returnLegend.setXEntrySpace(1f);
+
+        returnsChart.invalidate();
+
+        return returnsChart;
     }
 
-    /**
-     * create another getBarChartData() method to include another
-     * data
-     */
+    // create the proft chart showing both the regional avg and user stats
+    private HorizontalBarChart getProfitGraph(ArrayList<CropStats> cropStatsArrayList) {
+        // horizontal bar chart used for visualizing returns
+        HorizontalBarChart profitChart = (HorizontalBarChart) findViewById(R.id.modelProfitChart);
 
-    private BarData getBarChartData(CropStats defaults, CropStats custom) {
+        XAxis xAxis1 = profitChart.getXAxis();
+        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis1.setDrawAxisLine(true);
+        xAxis1.setDrawGridLines(true);
+        xAxis1.setGridLineWidth(0.3f);
 
-        ArrayList<BarEntry> defaultEntries = new ArrayList<>();
-        ArrayList<BarEntry> customEntries = new ArrayList<>();
 
-        // get the ordered results for only the default values, that way you don't run the risk
-        // of having the wrong amounts for the wrong labels in the custom results,
-        // mostly because of the high probability of the high to low values being different for
-        // the default and what a custom setting could show
-        ArrayList<CropStats.Result> defaultResult = defaults.getOrderedCostValues();
-        ArrayList<CropStats.Result> customResult = custom.getUnorderedCostValues();
+        YAxis leftAxis1 = profitChart.getAxisLeft();
+        leftAxis1.setDrawAxisLine(true);
+        leftAxis1.setDrawGridLines(false);
+        leftAxis1.setGridLineWidth(0.3f);
 
-        // set the barEntries based on the high to low concept
-        for (int i = 0; i < defaultResult.size(); i++) {
-            defaultEntries.add(new BarEntry(defaultResult.get(i).getValue(), i));
+
+        YAxis rightAxis1 = profitChart.getAxisRight();
+        rightAxis1.setDrawAxisLine(true);
+        rightAxis1.setDrawGridLines(false);
+
+        profitChart.setDrawBarShadow(true);
+        profitChart.setDrawValueAboveBar(true);
+        profitChart.setDescription("");
+        profitChart.setPinchZoom(false);
+        profitChart.setDrawGridBackground(true);
+
+
+        ArrayList<BarEntry> defaultReturnEntry = new ArrayList<>();
+        ArrayList<BarEntry> customReturnEntry = new ArrayList<>();
+        ArrayList<String> returnStrings = new ArrayList<>();
+        ArrayList<BarDataSet> returnsDataSet = new ArrayList<>();
+        returnStrings.add("Grain");
+
+
+        if (cropStatsArrayList.size() >= 1) {
+            defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getProfitFloat(), 0));
+            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
+            defaultDataSet.setValueFormatter(new MyValueFormatter());
+            defaultDataSet.setColor(Color.BLUE);
+            returnsDataSet.add(defaultDataSet);
+
+
+        }
+        if (cropStatsArrayList.size() >= 2) {
+
+            customReturnEntry.add(new BarEntry(cropStatsArrayList.get(1).getProfitFloat(), 0));
+            BarDataSet customDataSet = new BarDataSet(customReturnEntry, "Custom");
+            customDataSet.setValueFormatter(new MyValueFormatter());
+            customDataSet.setColor(Color.RED);
+            returnsDataSet.add(customDataSet);
         }
 
-        // set these values to mimic the previous setting
-        // get the ordered result, and it's original index
-        for (int i = 0; i < customResult.size(); i++) {
-            int index = defaultResult.get(i).getIndex();
-            customEntries.add(new BarEntry(customResult.get(index).getValue(), i));
 
-        }
+        BarData returnData = new BarData(returnStrings, returnsDataSet);
+        returnData.setValueFormatter(new MyValueFormatter());
+        profitChart.setData(returnData);
 
+        Legend returnLegend = profitChart.getLegend();
+        returnLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        returnLegend.setWordWrapEnabled(true);
+        returnLegend.setFormSize(8f);
+        returnLegend.setXEntrySpace(1f);
 
-        // these two methods are made to set the x axis
-        ArrayList<Integer> indices = defaults.getIndices(defaultResult);
-        ArrayList<String> xValues = getChartStrings(indices);
+        profitChart.invalidate();
 
-        BarDataSet defaultDataSet = new BarDataSet(defaultEntries, "Region Average");
-        defaultDataSet.setColor(Color.BLUE);
-        defaultDataSet.setValueFormatter(new MyValueFormatter());
-        defaultDataSet.setValueTextSize(8f);
-
-        BarDataSet customDataSet = new BarDataSet(customEntries, "Custom Values");
-        customDataSet.setColor(Color.RED);
-        customDataSet.setValueFormatter(new MyValueFormatter());
-        customDataSet.setValueTextSize(8f);
-
-        List<BarDataSet> barDataSets = new ArrayList<>();
-        barDataSets.add(customDataSet);
-        barDataSets.add(defaultDataSet);
-
-
-        BarData barData = new BarData(xValues, barDataSets);
-
-        return barData;
-        //TODO: create the bardatasets and have different colors
-
-
+        return profitChart;
     }
 
-
+    // get the strings for the titles of the costs
     private ArrayList<String> getChartStrings(ArrayList<Integer> entryArray) {
 
         ArrayList<String> entries = new ArrayList<>();
@@ -871,144 +1078,7 @@ public class Model extends AppCompatActivity {
     }
 
 
-    // create the
-    private HorizontalBarChart getReturnsGraph(ArrayList<CropStats> cropStatsArrayList) {
-        // horizontal bar chart used for visualizing returns
-        HorizontalBarChart returnsChart = (HorizontalBarChart) findViewById(R.id.modelReturnsChart);
 
-        XAxis xAxis1 = returnsChart.getXAxis();
-        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis1.setDrawAxisLine(true);
-        xAxis1.setDrawGridLines(true);
-        xAxis1.setGridLineWidth(0.3f);
-
-
-        YAxis leftAxis1 = returnsChart.getAxisLeft();
-        leftAxis1.setDrawAxisLine(true);
-        leftAxis1.setDrawGridLines(false);
-        leftAxis1.setGridLineWidth(0.3f);
-
-
-        YAxis rightAxis1 = returnsChart.getAxisRight();
-        rightAxis1.setDrawAxisLine(true);
-        rightAxis1.setDrawGridLines(false);
-
-        returnsChart.setDrawBarShadow(true);
-        returnsChart.setDrawValueAboveBar(true);
-        returnsChart.setDescription("");
-        returnsChart.setPinchZoom(false);
-        returnsChart.setDrawGridBackground(true);
-
-
-        ArrayList<BarEntry> defaultReturnEntry = new ArrayList<>();
-        ArrayList<BarEntry> customReturnEntry = new ArrayList<>();
-        ArrayList<String> returnStrings = new ArrayList<>();
-        ArrayList<BarDataSet> returnsDataSet = new ArrayList<>();
-        returnStrings.add("Grain");
-
-        Log.d("reg return", cropStatsArrayList.get(0).getTotalReturns() + "");
-        Log.d("custom return", cropStatsArrayList.get(1).getTotalReturns() + "");
-        if (cropStatsArrayList.size() >= 1) {
-            defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getTotalReturns(), 0));
-            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
-            defaultDataSet.setValueFormatter(new MyValueFormatter());
-            defaultDataSet.setColor(Color.BLUE);
-            returnsDataSet.add(defaultDataSet);
-
-
-        }
-        if (cropStatsArrayList.size() >= 2) {
-            customReturnEntry.add(new BarEntry(cropStatsArrayList.get(1).getTotalReturns(), 0));
-            BarDataSet customDataSet = new BarDataSet(customReturnEntry, "Custom");
-            customDataSet.setValueFormatter(new MyValueFormatter());
-            customDataSet.setColor(Color.RED);
-            returnsDataSet.add(customDataSet);
-        }
-
-
-        BarData returnData = new BarData(returnStrings, returnsDataSet);
-        returnData.setValueFormatter(new MyValueFormatter());
-        returnsChart.setData(returnData);
-
-        Legend returnLegend = returnsChart.getLegend();
-        returnLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        returnLegend.setWordWrapEnabled(true);
-        returnLegend.setFormSize(8f);
-        returnLegend.setXEntrySpace(1f);
-
-        returnsChart.invalidate();
-
-        return returnsChart;
-    }
-
-    private HorizontalBarChart getProfitGraph(ArrayList<CropStats> cropStatsArrayList) {
-        // horizontal bar chart used for visualizing returns
-        HorizontalBarChart profitChart = (HorizontalBarChart) findViewById(R.id.modelProfitChart);
-
-        XAxis xAxis1 = profitChart.getXAxis();
-        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis1.setDrawAxisLine(true);
-        xAxis1.setDrawGridLines(true);
-        xAxis1.setGridLineWidth(0.3f);
-
-
-        YAxis leftAxis1 = profitChart.getAxisLeft();
-        leftAxis1.setDrawAxisLine(true);
-        leftAxis1.setDrawGridLines(false);
-        leftAxis1.setGridLineWidth(0.3f);
-
-
-        YAxis rightAxis1 = profitChart.getAxisRight();
-        rightAxis1.setDrawAxisLine(true);
-        rightAxis1.setDrawGridLines(false);
-
-        profitChart.setDrawBarShadow(true);
-        profitChart.setDrawValueAboveBar(true);
-        profitChart.setDescription("");
-        profitChart.setPinchZoom(false);
-        profitChart.setDrawGridBackground(true);
-
-
-        ArrayList<BarEntry> defaultReturnEntry = new ArrayList<>();
-        ArrayList<BarEntry> customReturnEntry = new ArrayList<>();
-        ArrayList<String> returnStrings = new ArrayList<>();
-        ArrayList<BarDataSet> returnsDataSet = new ArrayList<>();
-        returnStrings.add("Grain");
-
-
-        if (cropStatsArrayList.size() >= 1) {
-            defaultReturnEntry.add(new BarEntry(cropStatsArrayList.get(0).getProfitFloat(), 0));
-            BarDataSet defaultDataSet = new BarDataSet(defaultReturnEntry, "Region Avg ");
-            defaultDataSet.setValueFormatter(new MyValueFormatter());
-            defaultDataSet.setColor(Color.BLUE);
-            returnsDataSet.add(defaultDataSet);
-
-
-        }
-        if (cropStatsArrayList.size() >= 2) {
-
-            customReturnEntry.add(new BarEntry(cropStatsArrayList.get(1).getProfitFloat(), 0));
-            BarDataSet customDataSet = new BarDataSet(customReturnEntry, "Custom");
-            customDataSet.setValueFormatter(new MyValueFormatter());
-            customDataSet.setColor(Color.RED);
-            returnsDataSet.add(customDataSet);
-        }
-
-
-        BarData returnData = new BarData(returnStrings, returnsDataSet);
-        returnData.setValueFormatter(new MyValueFormatter());
-        profitChart.setData(returnData);
-
-        Legend returnLegend = profitChart.getLegend();
-        returnLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        returnLegend.setWordWrapEnabled(true);
-        returnLegend.setFormSize(8f);
-        returnLegend.setXEntrySpace(1f);
-
-        profitChart.invalidate();
-
-        return profitChart;
-    }
 
 
 }

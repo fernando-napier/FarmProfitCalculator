@@ -13,6 +13,7 @@
         android:text="@string/welcome_menu_title"
         android:textSize="30sp"
         android:textColor="@color/LightCyan"
+        android:layout_marginTop="15sp"
         android:layout_marginBottom="20sp"
         android:gravity="center"
         />

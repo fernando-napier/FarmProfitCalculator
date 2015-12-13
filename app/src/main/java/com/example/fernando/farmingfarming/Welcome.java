@@ -25,6 +25,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ortiz.touch.*;
 import com.daimajia.slider.library.SliderLayout;
@@ -50,9 +51,7 @@ public class Welcome extends AppCompatActivity {
     private RegionData region = null;
     private int crop;
     private PopupWindow pWindow;
-    private static final String CORN_NAME = "Corn";
-    private static final String SOYBEAN_NAME = "Corn";
-    private static final String CROP_NAME = "Corn";
+
 
 
     @Override
@@ -102,8 +101,6 @@ public class Welcome extends AppCompatActivity {
         });
 
 
-
-
         // REGION_TEXT being clicked pops up an image of the US divided by regions
         REGION_CLOSE.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +111,8 @@ public class Welcome extends AppCompatActivity {
                 REGION_OPEN.setVisibility(View.VISIBLE);
 
 
-
             }
         });
-
-
-
-
 
 
         /**
@@ -298,59 +290,77 @@ public class Welcome extends AppCompatActivity {
         });
 
 
-
-
-
     }
 
 
     /**
      * from the which int chosen, then region then is instatiated
      */
-    private void createRegionDialogBox(int id) {
-
-        Spinner spinner = (Spinner) findViewById(R.id.welcomeSpinner);
+    private void createRegionDialogBox(final int cropId) {
 
 
-        final int cropID = id;
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        final ArrayAdapter<CharSequence> adapter;
-        if (cropID == 0) {
+        if (cropId == 0) {
 
-            adapter = ArrayAdapter.createFromResource(this, R.array.regionItemsCorn, android.R.layout.simple_spinner_item);
+            builder.setSingleChoiceItems(R.array.regionItemsCorn, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        } else {
+                    region = new RegionData(which);
 
-            adapter = ArrayAdapter.createFromResource(this, R.array.regionItemsSoybean, android.R.layout.simple_spinner_item);
+
+                }
+            });
+
+        } else if (cropId == 1) {
+
+            builder.setSingleChoiceItems(R.array.regionItemsSoybean, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    region = new RegionData(which);
+                }
+            });
 
         }
-        // Specify the layout to use when the list of choices appear
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+
+        builder.setNeutralButton("Set Own Values", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // this intent passes a parcelable arraylist of size 1 with only the regional average
+                // this is because the other activities could have multiple objects within the arraylist
+
+                Log.d("which", which + "");
+                try {
+                    Intent i = new Intent(Welcome.this, Custom.class);
+                    ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
+                    cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
+                    i.putParcelableArrayListExtra("crops", cropStatsArrayList);
+                    startActivity(i);
+                } catch (NullPointerException e) {
+                    showToast();
+                    builder.setTitle("Choose a Region");
+                    builder.create();
+                    builder.show();
+
+                }
+            }
+        });
+
 
         //TODO: set a cancel button
 
         builder.setTitle("Choose a Region");
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            @Override
-
-            // use which to set data accumulation
-            public void onClick(DialogInterface dialog, int which) {
-
-                region = new RegionData(which);
-
-                createModelDialogBox(cropID);
-
-
-            }
-        });
-
         builder.create();
         builder.show();
 
 
+    }
+
+    private void showToast(){
+        Toast.makeText(Welcome.this, "Choose a region", Toast.LENGTH_SHORT).show();
     }
 
     //This method allows a user to either go to the next activity and set their own variables
@@ -359,23 +369,9 @@ public class Welcome extends AppCompatActivity {
 
         AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
 
-        String name;
-
-        // get the string of the crop for setting the message of the alert dialog
-        switch (id) {
-            case 0:
-                name = "Corn";
-                break;
-            case 1:
-                name = "Soybean";
-                break;
-            default:
-                name = "Crop";
-                break;
-        }
 
         alert.setTitle("Model Variables Ready");
-        alert.setMessage("The model will show " + name + " averages for the " + region.getRegionName());
+        alert.setMessage("The model will show averages for the " + region.getRegionName());
         alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Set Own Values",
                 new DialogInterface.OnClickListener() {
                     @Override

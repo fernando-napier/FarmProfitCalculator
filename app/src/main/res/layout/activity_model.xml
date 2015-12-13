@@ -38,20 +38,9 @@
                 android:text="Edit Crop Values"
                 android:background="@drawable/rectangle"
                 android:layout_alignParentLeft="true"
-                android:layout_alignRight="@+id/modelDummy"
-                android:layout_marginBottom="15sp"
-                />
-            <Button
-                android:id="@+id/modelWelcomeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:background="@drawable/rectangle"
                 android:layout_alignParentRight="true"
-                android:layout_alignLeft="@+id/modelDummy"
                 android:layout_marginBottom="15sp"
                 />
-
 
 
             <TextView
@@ -87,11 +76,25 @@
                 android:textOff="Pie"
                 android:textOn="Bar" />
 
+            <TextView
+                android:id="@+id/modelInputValueTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@+id/modelDummy"
+                android:layout_below="@+id/modelInputsButton"
+                android:layout_marginBottom="10sp"
+                android:textColor="@color/DarkGreen"
+                android:textColorHint="@color/DarkGreen"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:hint="No values selected"/>
+
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/modelInputsBarChart"
                 android:layout_width="match_parent"
                 android:layout_height="800sp"
-                android:layout_below="@id/modelInputsButton"
+                android:layout_below="@id/modelInputValueTop"
                 android:visibility="invisible" />
 
 
@@ -110,12 +113,26 @@
                 android:layout_marginBottom="10sp"
                 android:visibility="visible" />
 
+            <TextView
+                android:id="@+id/modelInputValueBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@+id/modelDummy"
+                android:layout_below="@+id/modelInputsBarChart"
+                android:layout_marginBottom="10sp"
+                android:textColor="@color/DarkGreen"
+                android:textColorHint="@color/DarkGreen"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:hint="No values selected"/>
+
 
             <TextView
                 android:id="@+id/modelInputsAnalysis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/modelCustomPieChart"
+                android:layout_below="@+id/modelInputValueBottom"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 />
@@ -167,7 +184,21 @@
                 android:imeOptions="actionDone"
                 android:maxLength="10"
                 android:layout_marginTop="10sp"
+                />
 
+            <TextView
+                android:id="@+id/modelPriceBushelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modelCommodityText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:imeOptions="actionDone"
+                android:maxLength="10"
+                android:layout_marginTop="10sp"
+                android:visibility="invisible"
                 />
 
             <TextView
@@ -192,6 +223,18 @@
                 android:text="Returns"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
+            <TextView
+                android:id="@+id/modelReturnsValues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@+id/modelDummy"
+                android:layout_below="@id/modelCommodityHint"
+                android:textColor="@color/DarkGreen"
+                android:gravity="center"
+                android:text="No values selected"/>
+
+
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/modelReturnsChart"
                 android:layout_width="match_parent"
@@ -210,6 +253,17 @@
                 android:gravity="center"
                 android:text="Profit"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/modelProfitValues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@+id/modelDummy"
+                android:layout_below="@+id/modelReturnsChart"
+                android:textColor="@color/DarkGreen"
+                android:gravity="center"
+                android:text="No values selected"/>
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/modelProfitChart"

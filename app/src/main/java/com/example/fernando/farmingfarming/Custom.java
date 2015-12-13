@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,8 +35,6 @@ import java.util.TimerTask;
  * Created by fernando on 10/4/15.
  */
 public class Custom extends AppCompatActivity {
-
-
 
 
     @Override
@@ -82,10 +81,9 @@ public class Custom extends AppCompatActivity {
         final SQLiteDatabase DB_STATS = openOrCreateDatabase("stats", MODE_PRIVATE, null);
 
 
-
         Bundle bundle = getIntent().getExtras();
 
-        if(bundle == null){
+        if (bundle == null) {
             finish();
         } else {
 
@@ -121,7 +119,8 @@ public class Custom extends AppCompatActivity {
 
                         // YIELD_DISPLAY.setVisibility(View.VISIBLE);
                         // YIELD_EDIT_TEXT.setVisibility(View.INVISIBLE)
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);imm.showSoftInput(YIELD_EDIT_TEXT, InputMethodManager.SHOW_IMPLICIT);
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(YIELD_EDIT_TEXT, InputMethodManager.SHOW_IMPLICIT);
 
 
                     } else if ((!hasFocus) && (v.toString().length() == 0)) {
@@ -149,8 +148,6 @@ public class Custom extends AppCompatActivity {
 
                     YIELD_DISPLAY.setVisibility(View.VISIBLE);
                     YIELD_EDIT_TEXT.setVisibility(View.INVISIBLE);
-
-
 
 
                 }
@@ -1381,7 +1378,6 @@ public class Custom extends AppCompatActivity {
             final Button PREV_SAVED_CROP = (Button) findViewById(R.id.customPrevSavedStats);
 
 
-
             // this is the "edit prev values" button
             PREV_SAVED_CROP.setOnClickListener(new View.OnClickListener() {
 
@@ -1572,43 +1568,40 @@ public class Custom extends AppCompatActivity {
             /**
              * this is the method that leads to go back to the model
              */
+
+
             final Button MODEL_BUTTON = (Button) findViewById(R.id.customToModel);
             MODEL_BUTTON.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    // create and set the title for the alert dialog
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(Custom.this);
-                    dialog.setTitle("View crop data on the model");
 
                     // get the saved db crops from
                     DatabaseStats dbStats = new DatabaseStats(getApplicationContext());
                     final ArrayList<CropStats> CROPS_ARRAY = dbStats.getCropRegionCropStats(CROP.getCropName(), CROP.getRegionName());
 
 
-                    String[] checkBoxes = new String[CROPS_ARRAY.size()];
-
-                    for (int i = 0; i < CROPS_ARRAY.size(); i++) {
-                        checkBoxes[i] = CROPS_ARRAY.get(i).getTitle();
-
-                    }
-
-                    // used to get the correct id of the item chosen from the radio buttons set on
-                    // the setSingleChoiceItems() on the dialog
-                    final ArrayList<Integer> itemsSelected = new ArrayList();
-
                     // if no crops are found, let the user know to set crops
                     if (CROPS_ARRAY.size() == 0) {
-                        dialog.setMessage("Set some crop data in order to show it on the model");
-                        dialog.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                //Your logic when OK button is clicked
-                                dialog.dismiss();
-                            }
-                        });
+
+                        createAlertDialog(CROP);
 
                     } else {
+
+                        // create and set the title for the alert dialog
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(Custom.this);
+                        dialog.setTitle("View crop data on the model");
+
+
+                        String[] checkBoxes = new String[CROPS_ARRAY.size()];
+
+                        for (int i = 0; i < CROPS_ARRAY.size(); i++) {
+                            checkBoxes[i] = CROPS_ARRAY.get(i).getTitle();
+
+                        }
+
+                        // used to get the correct id of the item chosen from the radio buttons set on
+                        // the setSingleChoiceItems() on the dialog
+                        final ArrayList<Integer> itemsSelected = new ArrayList();
 
                         // set the list as a radio button list, so that only one crop data set gets transferred
                         // to the model
@@ -1629,7 +1622,7 @@ public class Custom extends AppCompatActivity {
 
 
                             }
-                        }).setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                        }).setPositiveButton("To Model", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
 
@@ -1670,17 +1663,18 @@ public class Custom extends AppCompatActivity {
                                 }
 
                             }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton("Set new values", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 // make the dialog disappear from the layout
-                                dialog.dismiss();
+                                createAlertDialog(CROP);
                             }
                         });
+                        dialog.create();
+                        dialog.show();
+
 
                     }
-                    dialog.create();
-                    dialog.show();
 
 
                 }
@@ -1699,7 +1693,66 @@ public class Custom extends AppCompatActivity {
 
             // end of onCreate() method
         }
+
+
     }
+
+    private void createAlertDialog(final CropStats crop) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Custom.this);
+        dialog.setTitle("View crop data on the model");
+        final EditText edit = new EditText(Custom.this);
+        edit.setHint("");
+        dialog.setView(edit);
+
+        dialog.setNeutralButton("To Model", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Log.d("edittext", edit.getText().toString() + " this");
+
+                if (TextUtils.equals(edit.getText(), "")) {
+                    //do nothing, let the activity close
+                    Toast.makeText(Custom.this, "Save Error. You must give the values a title before proceeding to the model", Toast.LENGTH_LONG).show();
+                } else {
+                    crop.setTitle(edit.getText().toString());
+                    DatabaseStats dbStats = new DatabaseStats(getApplicationContext());
+                    dbStats.addCropStats(crop);
+
+                    ArrayList<CropStats> modelCrops = new ArrayList<>();
+                    modelCrops.add(new CropStats(crop.getCrop(), crop.getRegion()));
+                    modelCrops.add(crop);
+
+                    // create the intent to go to the Model
+                    // include the parcelable arraylist of regional avg
+                    // and the custom crop
+                    Intent intent = new Intent(Custom.this, Model.class);
+                    intent.putParcelableArrayListExtra("crops", modelCrops);
+                    final ProgressDialog RENDER = ProgressDialog.show(Custom.this, "", "Rendering...", true);
+                    RENDER.setCancelable(false);
+
+                    // this timer is used because the loading of the Model
+                    // takes a few seconds so a rendering popup is created
+                    new Timer().schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    RENDER.dismiss();
+
+                                }
+                            },
+                            5000L
+                    );
+
+                    startActivity(intent);
+                }
+            }
+        });
+        dialog.create();
+        dialog.show();
+
+
+    }
+
 
     // display the values that were chosen to edit
     private void displayValues(CropStats cropStats) {
@@ -1795,7 +1848,7 @@ public class Custom extends AppCompatActivity {
 
         TextView currentCrop = (TextView) findViewById(R.id.customCurrentCrop);
 
-        if (cropStats.getTitle()== null){
+        if (cropStats.getTitle() == null) {
 
             currentCrop.setText("Stats not yet saved");
 
@@ -1806,8 +1859,6 @@ public class Custom extends AppCompatActivity {
         }
 
     }
-
-
 
 
     /**

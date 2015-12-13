@@ -1219,7 +1219,7 @@ public class CropStats implements Parcelable {
     }
 
     // the categories that will be represented on the inputs pie and bar chart
-    public String getIndexString(int index) {
+    public static String getIndexString(int index) {
         String indexString;
 
         switch (index) {
