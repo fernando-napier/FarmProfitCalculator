@@ -2,6 +2,7 @@ package com.example.fernando.farmingfarming;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -107,6 +108,7 @@ public class CropStats implements Parcelable {
         // and one for region
         String intermediate = crop + "" + region;
 
+        Log.d("combo IDs",intermediate);
 
         // this is a giant switch statement depending on which
         // region and crop you are getting data for

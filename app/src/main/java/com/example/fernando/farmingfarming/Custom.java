@@ -84,12 +84,18 @@ public class Custom extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         if (bundle == null) {
+
+            Log.d("bundle"," null");
             finish();
         } else {
 
             // get the extras from the previous intent
             final ArrayList<CropStats> cropStatsArrayList = bundle.getParcelableArrayList("crops");
-            final CropStats CROP = cropStatsArrayList.get(0);
+
+            //TODO: figure out why the values are not updating correctly with the parcelable arraylist
+            Log.d("arrayarray",cropStatsArrayList.isEmpty()+"");
+
+            final CropStats CROP = cropStatsArrayList.get(cropStatsArrayList.size()-1);
 
             setTitle("Customize " + CROP.getRegionName() + " " + CROP.getCropName());
 
@@ -349,7 +355,8 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -358,8 +365,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
                     // if there was a value added to the left of the
                     // dollar sign, then re-assemble the string with the dollar
                     // sign in at the 0 index
@@ -423,7 +436,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -433,7 +446,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
+
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
 
                     // if there is no input then do nothing
@@ -495,7 +515,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -505,8 +525,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -567,7 +593,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -577,8 +603,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -638,7 +670,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -648,8 +680,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -709,7 +747,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -719,8 +757,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -780,7 +824,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -790,8 +834,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -851,7 +901,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -861,8 +911,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -922,7 +978,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -932,8 +988,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -992,7 +1054,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -1002,8 +1064,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -1062,7 +1130,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -1072,8 +1140,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -1131,7 +1205,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -1141,8 +1215,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -1200,7 +1280,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -1210,8 +1290,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -1269,7 +1355,7 @@ public class Custom extends AppCompatActivity {
                     // this if statement is for a corner case in which the user enters an input
                     // to the left of the dollar sign, this solution just then takes that number and
                     // transfers it to the right of the dollar sign
-                    if (text.charAt(1) == '$') {
+                    if((text.length() > 1)&&(text.charAt(1) == '$')) {
                         text = text.replace("$", "");
                         text = text.replace(",", "");
                         value = Float.valueOf(text);
@@ -1279,8 +1365,14 @@ public class Custom extends AppCompatActivity {
 
                     text = text.replace("$", "");
                     text = text.replace(",", "");
-                    value = Float.valueOf(text);
 
+                    if(text.equalsIgnoreCase("")) {
+                        text = "0";
+                        value = Float.valueOf(text);
+                    } else{
+
+                        value = Float.valueOf(text);
+                    }
 
                     // if there is no input then do nothing
                     if ((s.length() == 0)) {
@@ -1587,6 +1679,9 @@ public class Custom extends AppCompatActivity {
 
                     } else {
 
+                        //TODO: added functionality
+                        dbStats.updateCrop(CROP,CROP.getTitle());
+
                         // create and set the title for the alert dialog
                         AlertDialog.Builder dialog = new AlertDialog.Builder(Custom.this);
                         dialog.setTitle("View crop data on the model");
@@ -1875,29 +1970,29 @@ public class Custom extends AppCompatActivity {
 
     // if back button is pressed, make sure to let the user know that unsaved data would be
     // lost
-    public void onBackPressed() {
-        AlertDialog dialog = new AlertDialog.Builder(Custom.this).create();
-        dialog.setTitle("Go Back Home");
-        dialog.setMessage("If you go back you will lose any progress that is not saved.");
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                startActivity(new Intent(Custom.this, Welcome.class));
-
-            }
-        });
-
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-    }
+//    public void onBackPressed() {
+//        AlertDialog dialog = new AlertDialog.Builder(Custom.this).create();
+//        dialog.setTitle("Go Back Home");
+//        dialog.setMessage("If you go back you will lose any progress that is not saved.");
+//        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//                startActivity(new Intent(Custom.this, Welcome.class));
+//
+//            }
+//        });
+//
+//        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.show();
+//
+//    }
 
 }
 

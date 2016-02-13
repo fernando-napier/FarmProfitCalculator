@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 
 import org.w3c.dom.Text;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -62,6 +64,8 @@ public class Welcome extends AppCompatActivity {
 
         setTitle("What's your bottom line?");
 
+        crop = -1;
+        region = null;
 
         slider = (SliderLayout) findViewById(R.id.welcomeSlider);
 
@@ -80,40 +84,6 @@ public class Welcome extends AppCompatActivity {
         final TextView REGION_OPEN = (TextView) findViewById(R.id.welcomeRegionImageOpen);
         final TextView REGION_CLOSE = (TextView) findViewById(R.id.welcomeRegionImageClose);
         final ImageView REGION_IMAGE = (ImageView) findViewById(R.id.welcomeTouchImage);
-
-        // REGION_TEXT being clicked pops up an image of the US divided by regions
-        REGION_OPEN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                // the slider automatically stops the scrolling from the slider, as this was
-                // causing an error when zooming in on the region image
-                slider.stopAutoCycle();
-
-
-                showRegionalImage();
-                REGION_OPEN.setVisibility(View.INVISIBLE);
-                REGION_CLOSE.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
-
-        // REGION_TEXT being clicked pops up an image of the US divided by regions
-        REGION_CLOSE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                REGION_CLOSE.setVisibility(View.INVISIBLE);
-                REGION_IMAGE.setVisibility(View.INVISIBLE);
-                REGION_OPEN.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
 
         /**
          * the next few onclicklisteners are for the images in the slider view
@@ -161,13 +131,61 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
+        // REGION_TEXT being clicked pops up an image of the US divided by regions
+        REGION_OPEN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                // the slider automatically stops the scrolling from the slider, as this was
+                // causing an error when zooming in on the region image
+                slider.stopAutoCycle();
+
+
+                showRegionalImage();
+                REGION_OPEN.setVisibility(View.INVISIBLE);
+                REGION_CLOSE.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+
+        // REGION_TEXT being clicked pops up an image of the US divided by regions
+        REGION_CLOSE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (crop != -1) {
+
+                    REGION_CLOSE.setVisibility(View.INVISIBLE);
+                    REGION_IMAGE.setVisibility(View.INVISIBLE);
+                    REGION_OPEN.setVisibility(View.VISIBLE);
+                    createRegionDialogBox(crop);
+
+
+                }else{
+                    REGION_CLOSE.setVisibility(View.INVISIBLE);
+                    REGION_IMAGE.setVisibility(View.INVISIBLE);
+                    REGION_OPEN.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
+
+
         if (isFirstTime()) {
 
             initiateTutorial();
 
         }
 
+
     }
+
+
 
     // this method is used to open up the tutorial the first time the app is opened
     // its the only point at which a sharedpreference is used
@@ -233,7 +251,7 @@ public class Welcome extends AppCompatActivity {
 
         AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
         alert.setTitle("Getting Started");
-        alert.setMessage("In order to view a model for our application you would first need to choose a region of study.");
+        alert.setMessage("Choose your region to get started. If you need assistance, press the help button.");
         alert.setButton(AlertDialog.BUTTON_NEUTRAL, "CHOOSE A REGION",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -242,6 +260,15 @@ public class Welcome extends AppCompatActivity {
 
                     }
                 });
+        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "HELP",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        showRegionalImage();
+
+                    }
+                });
+
 
         // without show() the dialog would not pop up
         alert.show();
@@ -336,6 +363,11 @@ public class Welcome extends AppCompatActivity {
                 try {
                     Intent i = new Intent(Welcome.this, Custom.class);
                     ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
+                    Log.d("regionid",region.getRegionID()+"");
+                    Log.d("cropid", crop + "");
+                    Log.d("size of arraylist",cropStatsArrayList.size()+"");
+                    // take out previous cropArraylist
+
                     cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
                     i.putParcelableArrayListExtra("crops", cropStatsArrayList);
                     startActivity(i);
@@ -370,8 +402,8 @@ public class Welcome extends AppCompatActivity {
         AlertDialog alert = new AlertDialog.Builder(Welcome.this).create();
 
 
-        alert.setTitle("Model Variables Ready");
-        alert.setMessage("The model will show averages for the " + region.getRegionName());
+        alert.setTitle("Set your own values");
+        alert.setMessage("You can input your own values for the " + region.getRegionName() + " region.");
         alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Set Own Values",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -381,6 +413,7 @@ public class Welcome extends AppCompatActivity {
                         // this is because the other activities could have multiple objects within the arraylist
                         Intent i = new Intent(Welcome.this, Custom.class);
                         ArrayList<CropStats> cropStatsArrayList = new ArrayList<>();
+                        Log.d("does this do anything?","");
                         cropStatsArrayList.add(new CropStats(crop, region.getRegionID()));
                         i.putParcelableArrayListExtra("crops", cropStatsArrayList);
                         startActivity(i);

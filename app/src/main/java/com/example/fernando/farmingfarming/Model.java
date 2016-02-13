@@ -159,7 +159,9 @@ public class Model extends AppCompatActivity {
         } else {
 
             pricePerBushel.setHint(cropStatsArrayList.get(1).getTitle() + " price: " + cropStatsArrayList.get(1).getPrice());
-
+            priceText.setHint(cropStatsArrayList.get(1).getTitle() + " price: " + cropStatsArrayList.get(1).getPrice());
+            priceText.setVisibility(View.VISIBLE);
+            priceText.setVisibility(View.INVISIBLE);
 
         }
 
@@ -771,12 +773,15 @@ public class Model extends AppCompatActivity {
          * //TODO: make sure that the pie legent values are wrapped
          */
 
+        Log.d("total crops",cropStats.size()+"");
         final CropStats custom = cropStats.get(1);
 
         ArrayList<CropStats.Result> customResult = custom.getOrderedCostValues();
         ArrayList<CropStats.Result> pieCustomResult = custom.getOrderedPieValues(customResult);
-        ArrayList<Float> customFloatValues = region.getFloatValues(pieCustomResult);
-        ArrayList<Integer> customIndexValues = region.getIndices(pieCustomResult);
+
+        //TODO:added this custom rather than region
+        ArrayList<Float> customFloatValues = custom.getFloatValues(pieCustomResult);
+        ArrayList<Integer> customIndexValues = custom.getIndices(pieCustomResult);
         ArrayList<Entry> customEntries = new ArrayList<>();
         ArrayList<String> customStringPie = getChartStrings(customIndexValues);
 
@@ -785,7 +790,7 @@ public class Model extends AppCompatActivity {
         }
 
 
-        PieDataSet customPieDataSet = new PieDataSet(regionEntries, "");
+        PieDataSet customPieDataSet = new PieDataSet(customEntries, "");
         customPieDataSet.setColors(getPieColors());
         customPieDataSet.setValueFormatter(new MyValueFormatter());
         customPieDataSet.setValueTextSize(8f);
@@ -793,7 +798,7 @@ public class Model extends AppCompatActivity {
         customPieDataSet.setHighlightEnabled(true);
 
 
-        PieData customPieData = new PieData(customStringPie, regionPieDataSet);
+        PieData customPieData = new PieData(customStringPie, customPieDataSet);
 
         PieChart pieCustomChart = (PieChart) findViewById(R.id.modelCustomPieChart);
 
